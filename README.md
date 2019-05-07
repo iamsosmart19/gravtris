@@ -1,3 +1,3 @@
 # gravtris
-TETRIS BUT BETTER
+TETRIS BUT BETTER\n
 now with colour
