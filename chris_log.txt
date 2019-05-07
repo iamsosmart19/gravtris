@@ -1,0 +1,29 @@
+7/5/19 Game Plot
+Minutes:
+	puzzle game
+	4th person game
+	tetris but direction keeps changing
+	so like
+	_______________________________________
+	|                                     |
+	|                                     |
+	|                                     |
+	|                                     |
+	|                                     |
+	|                                     |
+	|                                     |
+	|                start                |
+	|                                     |
+	|                                     |
+	|                                     |
+	|                                     |
+	|                                     |
+	|                                     |
+	|                                     |
+	|                                     |
+	|                                     |
+	|_____________________________________|
+	direction changes, but you start in the 
+	middle and blocks stick to the walls
+	gravtris
+	make a git repo in haxe
