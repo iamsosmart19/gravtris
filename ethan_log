@@ -1,0 +1,88 @@
+05-16.
+architecturally
+game: gravtris
+language: haxe
+lib: h.flixel
+
+game idea
+
+chris came up with this
+
+its tetris, but the gravity is constantly changing
+
+the tetrominoes start in the middle and fall outwards (or could they
+fall inwards from the outside? would change the games dynamics quite a
+bit but could be architected to be possible)
+
+should be maximally flexible as an engine yet keep its same core
+gameplay
+
+aiming for e.g. super mario maker - anyone who knows how to play mario
+can play it but all sorts of difft levels w difft dynamics
+
+so i'm thinking e.g. changeable stages (immovable blocks build stage
+w/in fixed nxm playing stage? discuss), changeable *rominoes,
+changeable gravities possible (only 4 cardinals or what? would
+decomplicate quite a bit... poss 8 directions? def not more w/ the
+current model) (in thinking about it more w/ difft gravities it should
+really be xmov ymov i.e. -1x 0y, 1x 0y, 0x 1y, 0x -1y for the standard
+cardinals but ofc can be edited) (would require a more robust
+collision detection then try to move then dont move if cant tho -
+possibly put on roadmap) - off the tangent - changeable speeds
+(multipliers)... changeable disappear zones (where if you have all
+spaces in a zone filled they disappear and it falls - ring disappear
+zones about the edge?) more as it comes
+to mind
+
+ofc doesnt need to be topdown written as such from first commit - just
+make sure to keep the code clean and compartmentalised etc. such that
+can easily change later
+
+in any case the main problem foreseeable rn is the falling of blocks
+when a zone is filled - in original tetris its just moving the lines
+down as far as possible down - works on *lines* as units - disappear
+zones would appear the obvious candidate for "fall zones" - probably
+going to fudge at first at least with just falling all down in the
+direction of gravity - might be unintuitive at first but would force
+you to think more about the interaction of the difft. gravities which
+is ofc the thing that that makes grav. diff to tet.
+
+disappear zones couldnt be fall zones tho - obvious problem of
+non-contiguous disappear zones or even no mans land w/ no zone - probs
+best to decouple and have as seperate zones - and ofc could always
+make disappear zones same as fall zones
+
+the whole concept of fall zones is completely silly in any case unless
+they are only start zones in which case disappear zones may?? be ok -
+obviously w/ difft sized fall zones cannot be mapped 1-1 as in
+original tetris so instead fall zones move w/ the block it wouldn't
+work - or would it?
+
+take a step back and fully articulate concept -
+fall zones would be zones into which blocks could not fall unless they
+were fully unoccupied. unmuddled *seems* like fine idea but if things
+were to fall not nec the same way as gravity would require 'fall
+gravity zones' as well which of course brings up 'gravity zones' which
+of course brings up zone zones and then gives me a fatal aneurysm
+
+would ofc read level files which level editor would write
+
+in any case grav zones would be liable to break up minoes w/out a mino
+centre which det.s the grav on the mino which is frankly absurd plus
+breaks fundamental assumptions and so will not happen. breaking up
+minos would play havoc of course with rotation which brings us into
+
+rotation is a tricky thing to do with blocks but the idea is for a 4x4
+(or longestxlongest) square to be following the live mino and to
+provide how it rotates - i think? look up how real tetris rotates -
+any case square rotates and component blocks in the square rotate w/
+square - probably closest thing to conception of mino as contiguous
+instead of a set of live blocks - i.e. blocks that move w/ gravity.
+
+gonna keep this quick - conception of game logic & physics quote
+unquote - h.flixel sprite oriented but really only sprites we need are
+coloured blocks - so internal matrix structure of blocks and free
+space - live blocks and dead blocks - when a live block tries to move
+into a dead block all live blocks instantly die and stop moving
+
+all for today 
