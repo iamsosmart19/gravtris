@@ -17,7 +17,7 @@ class PlayState extends FlxState
 		var curx:Int = 0;
 		var stx:Int = curx;
 		var gap:Int = 2;
-		this.sprs = [[new FlxSprite().makeGraphic(size, size, FlxColor.WHITE),new FlxSprite().makeGraphic(size, size, FlxColor.WHITE),new FlxSprite().makeGraphic(size, size, FlxColor.WHITE)],[new FlxSprite().makeGraphic(size, size, FlxColor.WHITE),new FlxSprite().makeGraphic(size, size, FlxColor.WHITE),new FlxSprite().makeGraphic(size, size, FlxColor.WHITE)],[new FlxSprite().makeGraphic(size, size, FlxColor.WHITE),new FlxSprite().makeGraphic(size, size, FlxColor.WHITE),new FlxSprite().makeGraphic(size, size, FlxColor.WHITE)]];
+		this.sprs = [[new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY)],[new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY)],[new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY)]];
 		for (row in this.sprs)
 		{
 		    for (spr in row)
