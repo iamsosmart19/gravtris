@@ -17,7 +17,7 @@ class PlayState extends FlxState
 		var curx:Int = 0;
 		var stx:Int = curx;
 		var gap:Int = 2;
-		this.sprs = new Array;
+		this.sprs = new Array<Array<FlxSprite>>();
 		//3 by 3 matrix, in case it wasnt obvious
 		for (i in 0...2)
 		{
