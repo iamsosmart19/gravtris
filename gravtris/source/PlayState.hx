@@ -19,7 +19,7 @@ class PlayState extends FlxState
 		var gap:Int = 2;
 		this.sprs = new Array<Array<FlxSprite>>();
 		//3 by 3 matrix, in case it wasnt obvious
-		for (i in 0...2)
+		for (i in 0...3)
 		{
 			this.sprs.push([new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),
 					new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),
