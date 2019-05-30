@@ -7,7 +7,7 @@ import flixel.util.FlxColor;
 class PlayState extends FlxState
 {
 	var tiles:Array<Array<Int>>;
-	var sprs:Array<Array<FlxSprite>>;
+	var sprs:Array<Array<FlxSprite>> = New Array<Array<FlxSprite>>();
 	override public function create():Void
 	{
 		super.create();
