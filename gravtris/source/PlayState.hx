@@ -7,7 +7,7 @@ import flixel.util.FlxColor;
 class PlayState extends FlxState
 {
 	var tiles:Array<Array<Int>>;
-	var sprs:Array<Array<FlxSprite>> = New Array();
+	var sprs:Array<Array<FlxSprite>>;
 	override public function create():Void
 	{
 		super.create();
@@ -17,6 +17,7 @@ class PlayState extends FlxState
 		var curx:Int = 0;
 		var stx:Int = curx;
 		var gap:Int = 2;
+		this.sprs = = New Array();
 		//3 by 3 matrix, in case it wasnt obvious
 		for (i in 0...2)
 		{
