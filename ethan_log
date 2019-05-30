@@ -85,4 +85,4 @@ coloured blocks - so internal matrix structure of blocks and free
 space - live blocks and dead blocks - when a live block tries to move
 into a dead block all live blocks instantly die and stop moving
 
-all for today 
+all for today  
