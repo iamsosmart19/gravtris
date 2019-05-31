@@ -86,3 +86,10 @@ space - live blocks and dead blocks - when a live block tries to move
 into a dead block all live blocks instantly die and stop moving
 
 all for today  
+
+05-30.
+got down to the practice today; wrote a matrix of sprites and of
+sprite statuses - should i merge them? should i use something other
+than an integer for sprite statuses? the answer to both of these is
+"probably". but now i can view an amazing show of a 3 by 3 square of
+grey tiles. it'll get better, i promise!
