@@ -27,16 +27,18 @@ class PlayState extends FlxState
 					new FlxSprite().makeGraphic(size, size, FlxColor.GRAY)]
 			);
 		}
-		//this.sprs = [[new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY)],[new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY)],[new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY)]];
 		for (row in this.sprs)
 		{
 		    for (spr in row)
 		    {
-			spr.x = curx;
-			spr.y = cury;
-			curx += size + gap;
-			add(spr);
+				spr.x = curx;
+				spr.y = cury;
+				//Increments x by the sprite size + the gap (to look sexy)
+				curx += size + gap;
+				//Renders sprite
+				add(spr);
 		    }
+			//Increments y by the sprite size + the gap (oooh yeah)
 		    cury += size + gap;
 		    curx = stx;
 		}
