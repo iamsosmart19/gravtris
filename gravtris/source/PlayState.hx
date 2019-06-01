@@ -21,9 +21,11 @@ class PlayState extends FlxState
 		//3 by 3 matrix, in case it wasnt obvious
 		for (i in 0...3)
 		{
-			this.sprs.push([new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),
+			this.sprs.push([
 					new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),
-					new FlxSprite().makeGraphic(size, size, FlxColor.GRAY)]);
+					new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),
+					new FlxSprite().makeGraphic(size, size, FlxColor.GRAY)]
+			);
 		}
 		//this.sprs = [[new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY)],[new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY)],[new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),new FlxSprite().makeGraphic(size, size, FlxColor.GRAY)]];
 		for (row in this.sprs)
