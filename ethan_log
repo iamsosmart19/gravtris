@@ -103,3 +103,13 @@ backbone of the display routine written. i foresee needing to iterate
 in tandem again, but really it's quite hard to make that a function
 without first-class functions, and in any case it should be a special
 form.
+
+minutes of my impromptu "meeting" with chris today: "no, you dingus,
+you gotta use proxychains! no, now you've set the proxy variables, you
+gotta STOP using proxychains! c'mon chris, how hard is it to
+git-pull?"
+
+played some vitetris for comparison. i'm not sure how tetris rotation
+works, but i hear there is a tetris bible of the correct game
+mechanics to implement in order to get licensed the name "tetris" -
+that would be a good reference to use.
