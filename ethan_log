@@ -93,3 +93,13 @@ sprite statuses - should i merge them? should i use something other
 than an integer for sprite statuses? the answer to both of these is
 "probably". but now i can view an amazing show of a 3 by 3 square of
 grey tiles. it'll get better, i promise!
+
+06-03.
+now it is an amazing show of a three by three square of grey
+tiles.... with a white tile in the middle! had to iterate manually,
+without using the for construct, which was annoying, but you do what
+you must in order to make tiles correspond. anyway, that's the
+backbone of the display routine written. i foresee needing to iterate
+in tandem again, but really it's quite hard to make that a function
+without first-class functions, and in any case it should be a special
+form.
