@@ -70,7 +70,6 @@ class PlayState extends FlxState
 					spr.color = FlxColor.WHITE;
 				}
 			}
-			
 
 		}
 			
