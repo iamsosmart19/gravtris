@@ -22,9 +22,9 @@ class PlayState extends FlxState
 		for (i in 0...3)
 		{
 			this.sprs.push([
-					new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),
-					new FlxSprite().makeGraphic(size, size, FlxColor.GRAY),
-					new FlxSprite().makeGraphic(size, size, FlxColor.GRAY)]
+					new FlxSprite().makeGraphic(size, size, FlxColor.WHITE),
+					new FlxSprite().makeGraphic(size, size, FlxColor.WHITE),
+					new FlxSprite().makeGraphic(size, size, FlxColor.WHITE)]
 			);
 		}
 		for (row in this.sprs)
