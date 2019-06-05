@@ -27,3 +27,10 @@ Minutes:
 	middle and blocks stick to the walls
 	gravtris
 	make a git repo in haxe
+
+4/6/19 
+gravtris
+15 * 15
+read the tetris design guidelines
+different layers for current tile and board
+one collision detection, where it detects if any tiles are overlapping

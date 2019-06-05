@@ -11,22 +11,17 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		super.create();
-		this.tiles = [[0,0,0],[0,1,0],[0,0,0]];
+		//			   1 2 3 4 5 6 7 8 9 1011
+		this.tiles = [for(i in 0...16) [for(j in 0...16) 0]];
+
 		var size:Int = 10;
 		var cury:Int = 0;
 		var curx:Int = 0;
 		var stx:Int = curx;
 		var gap:Int = 2;
 		this.sprs = new Array<Array<FlxSprite>>();
-		//3 by 3 matrix, in case it wasnt obvious
-		for (i in 0...3)
-		{
-			this.sprs.push([
-					new FlxSprite().makeGraphic(size, size, FlxColor.WHITE),
-					new FlxSprite().makeGraphic(size, size, FlxColor.WHITE),
-					new FlxSprite().makeGraphic(size, size, FlxColor.WHITE)]
-			);
-		}
+		//16 by 16 matrix, in case it wasnt obvious
+		this.sprs = [ for(i in 0...16) [for(j in 0...16) new FlxSprite().makeGraphic(size, size, FlxColor.WHITE)]];
 		for (row in this.sprs)
 		{
 		    for (spr in row)
