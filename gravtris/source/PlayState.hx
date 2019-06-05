@@ -3,15 +3,18 @@ package;
 import flixel.FlxState;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
+import flixel.math.FlxPoint;
 
 class PlayState extends FlxState
 {
 	var tiles:Array<Array<Int>>;
 	var sprs:Array<Array<FlxSprite>>;
+	var title:FlxText;
 	override public function create():Void
 	{
 		super.create();
-		//			   1 2 3 4 5 6 7 8 9 1011
 		this.tiles = [for(i in 0...16) [for(j in 0...16) 0]];
 
 		var size:Int = 20;
@@ -38,6 +41,11 @@ class PlayState extends FlxState
 		    curx = stx;
 		}
 
+		title = new FlxText(stx + size * 16 + 80, 100, 200);
+		title.text = "GRAVTRIS";	
+		title.setFormat("assets/font.ttf", 24, FlxColor.WHITE, CENTER);
+		title.setBorderStyle(OUTLINE, FlxColor.BLUE, 1);
+		add(title);
 	}
 
 	override public function update(elapsed:Float):Void
@@ -54,7 +62,7 @@ class PlayState extends FlxState
 			var trowItr:Iterator<Int> = tileRow.iterator();
 			var srowItr:Iterator<FlxSprite> =sprsRow.iterator();
 			while (trowItr.hasNext() && srowItr.hasNext())
-			{
+		{
 				var tile:Int = trowItr.next();				
 				var spr:FlxSprite  = srowItr.next();
 				if (tile == 0)
