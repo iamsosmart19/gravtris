@@ -14,11 +14,11 @@ class PlayState extends FlxState
 		//			   1 2 3 4 5 6 7 8 9 1011
 		this.tiles = [for(i in 0...16) [for(j in 0...16) 0]];
 
-		var size:Int = 10;
-		var cury:Int = 0;
-		var curx:Int = 0;
+		var size:Int = 20;
+		var gap:Int = 4;
+		var cury:Int = gap * 5;
+		var curx:Int = gap * 5;
 		var stx:Int = curx;
-		var gap:Int = 2;
 		this.sprs = new Array<Array<FlxSprite>>();
 		//16 by 16 matrix, in case it wasnt obvious
 		this.sprs = [ for(i in 0...16) [for(j in 0...16) new FlxSprite().makeGraphic(size, size, FlxColor.WHITE)]];
