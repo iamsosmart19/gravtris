@@ -113,3 +113,15 @@ played some vitetris for comparison. i'm not sure how tetris rotation
 works, but i hear there is a tetris bible of the correct game
 mechanics to implement in order to get licensed the name "tetris" -
 that would be a good reference to use.
+
+06-16.
+
+computer has been broken for 2 weeks now.
+
+had online meeting with Chris, stressed importance of polish in
+differentiating this from just any old game. also in how to implement
+the mechanics (tetromino matrix overlaid on field matrix with gravity 
+falling by changing offset... easy collision and display plus easi*er*
+rotation.)
+
+that's about it. can't really implement much w/o a computer
