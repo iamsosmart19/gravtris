@@ -34,3 +34,9 @@ gravtris
 read the tetris design guidelines
 different layers for current tile and board
 one collision detection, where it detects if any tiles are overlapping
+
+16/7/19
+discussed possible feature additions to the game, such as a campaign mode
+or a level editor
+we also discussed technical details of implementatin of collision detection and rotation.
+

@@ -55,14 +55,14 @@ class PlayState extends FlxState
 		var sprsIter:Iterator<Array<FlxSprite>> = this.sprs.iterator();
 		var curx:Int = 0;
 		var cury:Int = 0;
-		while (tileIter.hasNext() && sprsIter.hasNext())
+		while (tileIter.hasNext() && sprsIter.hasNext()) 
 		{
 			var tileRow:Array<Int>= tileIter.next();
 			var sprsRow:Array<FlxSprite> = sprsIter.next();
 			var trowItr:Iterator<Int> = tileRow.iterator();
 			var srowItr:Iterator<FlxSprite> =sprsRow.iterator();
-			while (trowItr.hasNext() && srowItr.hasNext())
-		{
+			while (trowItr.hasNext() && srowItr.hasNext()) 
+			{
 				var tile:Int = trowItr.next();				
 				var spr:FlxSprite  = srowItr.next();
 				if (tile == 0)
@@ -73,7 +73,6 @@ class PlayState extends FlxState
 					spr.color = FlxColor.WHITE;
 				}
 			}
-
 		}
 			
 					
