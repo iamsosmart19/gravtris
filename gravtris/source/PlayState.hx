@@ -57,10 +57,10 @@ class PlayState extends FlxState
 		var cury:Int = 0;
 		while (tileIter.hasNext() && sprsIter.hasNext()) 
 		{
-			var tileRow:Array<Int>= tileIter.next();
+			var tileRow:Array<Int> = tileIter.next();
 			var sprsRow:Array<FlxSprite> = sprsIter.next();
 			var trowItr:Iterator<Int> = tileRow.iterator();
-			var srowItr:Iterator<FlxSprite> =sprsRow.iterator();
+			var srowItr:Iterator<FlxSprite> = sprsRow.iterator();
 			while (trowItr.hasNext() && srowItr.hasNext()) 
 			{
 				var tile:Int = trowItr.next();				
