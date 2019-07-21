@@ -61,13 +61,14 @@ class Tetromino {
 	
 	public function rotate() {
 		//function that rotates the tetromino
-		for (i in 0...blks.length) 
+		var newblks:Array<Array<Int>> = [for(i in 0...blks.length) [for(j in 0...blks.length) 0]];
+		for (y in 0...blks.length) 
 		{
-			for(j in 0...blks[0].length) 
+			for(x in 0...blks[0].length) 
 			{
-			//;
 			}
 		}
+		blks = newblks;
 	}
 
 	public function x():Int {
@@ -101,7 +102,5 @@ class Tetromino {
 	public function left() {
 	       this.xC -= 1;
 	}
-
-	
 
 }
