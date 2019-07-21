@@ -13,13 +13,15 @@ class PlayState extends FlxState
 	var sprs:Array<Array<FlxSprite>>;
 	var title:FlxText;
 	var tromino:Tetromino;
+	var downinterval:Float;
+	var downtimer:Float;
 	override public function create():Void
 	{
 		super.create();
-		this.tromino = new Tetromino(2);
 		this.tiles = [for(i in 0...16) [for(j in 0...16) 0]];
-		trominoToTile();
-
+		this.tromino = new Tetromino(2);
+		this.downinterval = 1.0;
+		this.downtimer = 0.0;
 		var size:Int = 20;
 		var gap:Int = 4;
 		var cury:Int = gap * 5;
@@ -53,6 +55,13 @@ class PlayState extends FlxState
 
 	override public function update(elapsed:Float):Void
 	{
+		//update timers
+		this.downtimer += elapsed;
+		trace(this.downtimer);
+		if (this.downtimer > this.downinterval) {
+		   this.tromino.down();
+		   this.downtimer = 0.0;
+		}
 		//do something -- anything!
 		var tileIter:Iterator<Array<Int>> = this.tiles.iterator();
 		var sprsIter:Iterator<Array<FlxSprite>> = this.sprs.iterator();

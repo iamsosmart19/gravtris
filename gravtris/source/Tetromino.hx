@@ -15,9 +15,8 @@ class Tetromino {
 		switch type {
 			case 0:
 				// O tetromino
-				this.blks = [ [0, 1, 1],
-								[0, 1, 1],	
-								[0, 0, 0]];
+				this.blks = [ [1, 1],
+								[1, 1]];
 			case 1:
 				// I tetromino
 				this.blks = [ [0, 0, 0, 0],
@@ -52,12 +51,12 @@ class Tetromino {
 			default:
 				this.blks = [for (i in 0...3) [for (i in 0...3) 0]];
 		}
-		xC = 7;
-		yC = 6;
+		this.xC = 7;
+		this.yC = 6;
 	}
 
 	public function blocks():Array<Array<Int>> {
-		return blks;
+		return this.blks;
 	}
 	
 	public function rotate() {
@@ -65,23 +64,37 @@ class Tetromino {
 	}
 
 	public function x():Int {
-		return xC;
+		return this.xC;
 	}
 	
 	public function y():Int {
-		return yC;
+		return this.yC;
 	}
 
+	public function setX(x:Int) {
+	       this.xC = x;
+	}
+
+	public function setY(y:Int) {
+	       this.yC = y;
+	}
+	       
+	public function up() {
+	       this.yC += 1;
+	}
+	
 	public function down() {
-		yC -= 1;
+	       this.yC -= 1;
 	}
 
 	public function right() {
-		xC += 1;
+	       this.xC += 1;
 	}
 
 	public function left() {
-		xC -= 1;
+	       this.xC -= 1;
 	}
+
+	
 
 }
