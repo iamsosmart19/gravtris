@@ -15,7 +15,7 @@ class Tetromino {
 		switch type {
 			case 0:
 				// O tetromino
-				this.blks = [ [1, 1],
+				this.blks = [	[1, 1],
 								[1, 1]];
 			case 1:
 				// I tetromino
@@ -64,7 +64,7 @@ class Tetromino {
 		var newblks:Array<Array<Int>> = [for(i in 0...blks.length) [for(j in 0...blks.length) 0]];
 		for (y in 0...blks.length) 
 		{
-			for(x in 0...blks[0].length) 
+			for(x in 0...blks.length) 
 			{
 				newblks[x][y] = blks[y][x];
 				
