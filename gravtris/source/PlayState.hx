@@ -21,7 +21,7 @@ class PlayState extends FlxState
 		super.create();	@:generic
 		this.magicnumber = 3; //needs to be before .tiles
 		this.tiles = prosthetise([for(i in 0...16) [for(j in 0...16) 0]]);
-		this.tromino = new Tetromino(2);
+		this.tromino = new Tetromino(1);
 		this.downinterval = 1.0;
 		this.downtimer = 0.0;
 		var size:Int = 20;
@@ -62,6 +62,7 @@ class PlayState extends FlxState
 		////trace(this.downtimer);
 		if (this.downtimer > this.downinterval) {
 		   this.tromino.down();
+		  this.tromino.rotate();
 		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
 		      this.tromino.up();
 		      this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
@@ -102,8 +103,8 @@ class PlayState extends FlxState
 	       returnmatrix = [for(i in 0...ySize) [for(j in 0...xSize) 0]];
 	       for (yC in 0...matrix.length) {
 	       	   for (xC in 0...matrix[yC].length) {
-		       returnmatrix[yC+y][xC+x] = matrix[yC][xC];
-		   }
+				   returnmatrix[yC+y][xC+x] = matrix[yC][xC];
+			   }
 	       }
 	       return returnmatrix;
 	}
@@ -113,8 +114,8 @@ class PlayState extends FlxState
 	       returnmatrix = [for(i in 0...m1.length) [for(j in 0...m1[0].length) 0]];
 	       for (yC in 0...returnmatrix.length) {
 	       	   for (xC in 0...returnmatrix[0].length) {
-		       returnmatrix[yC][xC] = m1[yC][xC] | m2[yC][xC]; //fck it. bitwise or
-		   }
+				   returnmatrix[yC][xC] = m1[yC][xC] | m2[yC][xC]; //fck it. bitwise or
+			   }
 	       }
 	       return returnmatrix;
 	}
@@ -129,8 +130,8 @@ class PlayState extends FlxState
 	       newtiles = [for(i in 0...(tiles.length+(this.magicnumber*2)))  [for(j in 0...(tiles[0].length+(this.magicnumber*2))) -1]];
 	       for (yC in 0...tiles.length) {
 	       	   for (xC in 0...tiles[yC].length) {
-		       newtiles[yC+this.magicnumber][xC+this.magicnumber] = tiles[yC][xC];
-		   }
+				   newtiles[yC+this.magicnumber][xC+this.magicnumber] = tiles[yC][xC];
+			   }
 	       }
 	       return newtiles;
 	}
@@ -140,10 +141,10 @@ class PlayState extends FlxState
 	       newtiles = [for(i in 0...(tiles.length-(this.magicnumber*2)))  [for(j in 0...(tiles[0].length-(this.magicnumber*2))) 0]];
 	       for (yC in 0...tiles.length) {
 	       	   for (xC in 0...tiles[yC].length) {
-		       if (((yC+this.magicnumber*2)<(tiles.length)) && ((xC+this.magicnumber*2)<(tiles[yC].length))) {
-		       	  newtiles[yC][xC] = tiles[yC+this.magicnumber][xC+this.magicnumber];
-		       }
-		   }
+				   if (((yC+this.magicnumber*2)<(tiles.length)) && ((xC+this.magicnumber*2)<(tiles[yC].length))) {
+					  newtiles[yC][xC] = tiles[yC+this.magicnumber][xC+this.magicnumber];
+				   }
+			   }
 	       }
 	       return newtiles;
 	}

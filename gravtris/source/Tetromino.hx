@@ -15,7 +15,7 @@ class Tetromino {
 		switch type {
 			case 0:
 				// O tetromino
-				this.blks = [ [1, 1],
+				this.blks = [	[1, 1],
 								[1, 1]];
 			case 1:
 				// I tetromino
@@ -62,13 +62,23 @@ class Tetromino {
 	public function rotate() {
 		//function that rotates the tetromino
 		var newblks:Array<Array<Int>> = [for(i in 0...blks.length) [for(j in 0...blks.length) 0]];
+		trace('$newblks');
+		var ycoord:Int;
 		for (y in 0...blks.length) 
 		{
-			for(x in 0...blks[0].length) 
+			for(x in 0...blks.length) 
 			{
+				if(blks.length % 2 == 1) { 
+					ycoord = cast(-(y - Std.int(blks.length / 2)) + Std.int(blks.length / 2), Int);
+				}
+				else {
+					ycoord = cast(-(y - Std.int(blks.length / 2)) + Std.int(blks.length / 2), Int) - 1;
+				}
+				newblks[x][ycoord] = blks[y][x];
 			}
 		}
 		blks = newblks;
+		trace('$blks');
 	}
 
 	public function x():Int {
