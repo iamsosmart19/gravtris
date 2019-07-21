@@ -59,13 +59,35 @@ class Tetromino {
 		return this.blks;
 	}
 	
-	public function rotate() {
+	public function rotateCW() {
 		//function that rotates the tetromino
 		var newblks:Array<Array<Int>> = [for(i in 0...blks.length) [for(j in 0...blks.length) 0]];
 		for (y in 0...blks.length) 
 		{
 			for(x in 0...blks[0].length) 
 			{
+				newblks[x][y] = blks[y][x];
+				
+			}
+		}
+		for (row in newblks) {
+		    row.reverse();
+		}
+		blks = newblks;
+	}
+
+	public function rotateCCW() {
+		//function that rotates the tetromino
+		var newblks:Array<Array<Int>> = [for(i in 0...blks.length) [for(j in 0...blks.length) 0]];
+		for (row in blks) {
+		    row.reverse();
+		}
+		for (y in 0...blks.length) 
+		{
+			for(x in 0...blks[0].length) 
+			{
+				newblks[x][y] = blks[y][x];
+				
 			}
 		}
 		blks = newblks;

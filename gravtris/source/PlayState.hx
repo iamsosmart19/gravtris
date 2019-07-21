@@ -6,6 +6,8 @@ import flixel.util.FlxColor;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.math.FlxPoint;
+import flixel.math.FlxRandom;
+import flixel.FlxG;
 
 class PlayState extends FlxState
 {
@@ -16,14 +18,19 @@ class PlayState extends FlxState
 	var downinterval:Float;
 	var downtimer:Float;
 	var magicnumber:Int; //for xmino x-1
+	var softdrop:Bool;
+	var bag:Array<Int>;
 	override public function create():Void
 	{
-		super.create();	@:generic
+		super.create();	
 		this.magicnumber = 3; //needs to be before .tiles
 		this.tiles = prosthetise([for(i in 0...16) [for(j in 0...16) 0]]);
-		this.tromino = new Tetromino(2);
+		this.bag = [0,1,2,3,4,5,6]; //needs to be before .tromino
+		this.tromino = new Tetromino(next_bag());
 		this.downinterval = 1.0;
 		this.downtimer = 0.0;
+		this.softdrop = false;
+		//sprite init
 		var size:Int = 20;
 		var gap:Int = 4;
 		var cury:Int = gap * 5;
@@ -60,16 +67,70 @@ class PlayState extends FlxState
 		//update timers
 		this.downtimer += elapsed;
 		////trace(this.downtimer);
+
+		//BEGINNING OF INPUT CODE
+		if (FlxG.keys.justPressed.DOWN) {
+		   if (!softdrop) {
+		      this.downinterval /= 8;
+		      this.softdrop = true;
+		   }
+		}
+
+		if (FlxG.keys.justReleased.DOWN) {
+		   if (softdrop) {
+		      this.downinterval *= 8;
+		      this.softdrop = false;
+		   }
+		}
+
+		if (FlxG.keys.justPressed.LEFT) {
+		   this.tromino.left();
+		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
+		      this.tromino.right();
+		   }
+		}
+
+		if (FlxG.keys.justPressed.RIGHT) {
+		   this.tromino.right();
+		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
+		      this.tromino.left();
+		   }
+		}
+
+		if (FlxG.keys.justPressed.X || FlxG.keys.justPressed.UP) {
+		   this.tromino.rotateCW();
+		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
+		      this.tromino.rotateCCW();
+		      //TODO: super rotation system
+		   }
+		}
+
+		if (FlxG.keys.justPressed.Z) {
+		   this.tromino.rotateCCW();
+		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
+		      this.tromino.rotateCW();
+		      //TODO: super rotation system
+		   }
+		}
+
+		//END OF INPUT CODE
+		//TODO -- REFACTOR INPUT
+		
+		//TODO: CONTROLS LINKED TO SINGLE TETROMINOS
 		if (this.downtimer > this.downinterval) {
 		   this.tromino.down();
 		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
 		      this.tromino.up();
 		      this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
-		      this.tromino = new Tetromino(2);
+		      this.tromino = new Tetromino(next_bag());
 		   }
 		   this.downtimer = 0.0;
 		}
-		//do something -- anything!
+
+		//END OF GAMEPLAY CODE
+
+
+		//BEGINNING OF DISPLAY CODE
 		var realones:Array<Array<Int>> = tromino_plus_tiles(this.tromino, this.tiles);
 		//trace(realones);
 		var tileIter:Iterator<Array<Int>> = realones.iterator();
@@ -171,6 +232,14 @@ class PlayState extends FlxState
 
 	public function tromino_collide_tiles(tromino:Tetromino, tiles:Array<Array<Int>>):Bool {
 	       return matrices_collidep(tiles, offset_matrix(tromino.blocks(), tromino.x()+this.magicnumber, tromino.y()+this.magicnumber, tiles[0].length, tiles.length));
+	}
+
+	public function next_bag():Int {
+	       if (this.bag.length == 0) {
+	       	  this.bag = [0,1,2,3,4,5,6];
+               }
+	       FlxG.random.shuffle(this.bag);
+	       return this.bag.pop();
 	}
 }	
 
