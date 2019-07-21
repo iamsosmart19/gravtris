@@ -12,10 +12,13 @@ class PlayState extends FlxState
 	var tiles:Array<Array<Int>>;
 	var sprs:Array<Array<FlxSprite>>;
 	var title:FlxText;
+	var tromino:Tetromino;
 	override public function create():Void
 	{
 		super.create();
+		this.tromino = new Tetromino(0);
 		this.tiles = [for(i in 0...16) [for(j in 0...16) 0]];
+		//mark coords based on Tetromino
 
 		var size:Int = 20;
 		var gap:Int = 4;
