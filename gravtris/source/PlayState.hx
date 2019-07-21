@@ -59,9 +59,14 @@ class PlayState extends FlxState
 	{
 		//update timers
 		this.downtimer += elapsed;
-		//trace(this.downtimer);
+		////trace(this.downtimer);
 		if (this.downtimer > this.downinterval) {
 		   this.tromino.down();
+		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
+		      this.tromino.up();
+		      this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
+		      this.tromino = new Tetromino(2);
+		   }
 		   this.downtimer = 0.0;
 		}
 		//do something -- anything!
@@ -115,7 +120,7 @@ class PlayState extends FlxState
 	}
 
 	public function tromino_plus_tiles(tromino:Tetromino, tiles:Array<Array<Int>>):Array<Array<Int>> {
-	       //trace( offset_matrix(tromino.blocks(), tromino.x(), tromino.y(), tiles[0].length, tiles.length));
+	       ////trace( offset_matrix(tromino.blocks(), tromino.x(), tromino.y(), tiles[0].length, tiles.length));
 	       return deprosthetise(overlay_matrices(tiles, offset_matrix(tromino.blocks(), tromino.x()+this.magicnumber, tromino.y()+this.magicnumber, tiles[0].length, tiles.length)));
 	}
 
@@ -141,6 +146,31 @@ class PlayState extends FlxState
 		   }
 	       }
 	       return newtiles;
+	}
+
+	public function matrices_collidep(m1:Array<Array<Int>>, m2:Array<Array<Int>>):Bool {
+		var m1Iter:Iterator<Array<Int>> = m1.iterator();
+		var m2Iter:Iterator<Array<Int>> = m2.iterator();
+		while (m1Iter.hasNext() && m2Iter.hasNext()) 
+		{
+			var m1Row:Array<Int> = m1Iter.next();
+			var m2Row:Array<Int> = m2Iter.next();
+			var r1Itr:Iterator<Int> = m1Row.iterator();
+			var r2Itr:Iterator<Int> = m2Row.iterator();
+			while (r1Itr.hasNext() && r2Itr.hasNext()) 
+			{
+				var m1a:Int = r1Itr.next();				
+				var m2a:Int = r2Itr.next();
+				if ((m1a != 0) && (m2a != 0)) {
+				   return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public function tromino_collide_tiles(tromino:Tetromino, tiles:Array<Array<Int>>):Bool {
+	       return matrices_collidep(tiles, offset_matrix(tromino.blocks(), tromino.x()+this.magicnumber, tromino.y()+this.magicnumber, tiles[0].length, tiles.length));
 	}
 }	
 
