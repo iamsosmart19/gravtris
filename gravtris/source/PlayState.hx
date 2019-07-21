@@ -69,6 +69,13 @@ class PlayState extends FlxState
 		////trace(this.downtimer);
 
 		//BEGINNING OF INPUT CODE
+		if (FlxG.keys.justPressed.SPACE) {
+			while(!tromino_collide_tiles(this.tromino, this.tiles)) {
+				this.tromino.down();
+			}
+			this.tromino.up();
+		}
+
 		if (FlxG.keys.justPressed.DOWN) {
 		   if (!softdrop) {
 		      this.downinterval /= 8;

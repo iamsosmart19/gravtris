@@ -60,14 +60,13 @@ class Tetromino {
 	}
 	
 	public function rotateCW() {
-		//function that rotates the tetromino
+		//function that rotates the tetromino clockwise
 		var newblks:Array<Array<Int>> = [for(i in 0...blks.length) [for(j in 0...blks.length) 0]];
 		for (y in 0...blks.length) 
 		{
 			for(x in 0...blks.length) 
 			{
 				newblks[x][y] = blks[y][x];
-				
 			}
 		}
 		for (row in newblks) {
@@ -77,7 +76,7 @@ class Tetromino {
 	}
 
 	public function rotateCCW() {
-		//function that rotates the tetromino
+		//function that rotates the tetromino counter-clockwise
 		var newblks:Array<Array<Int>> = [for(i in 0...blks.length) [for(j in 0...blks.length) 0]];
 		for (row in blks) {
 		    row.reverse();
