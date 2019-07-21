@@ -19,33 +19,33 @@ class Tetromino {
 								[1, 1]];
 			case 1:
 				// I tetromino
-				this.blks = [ [0, 0, 0, 0],
+				this.blks = [	[0, 0, 0, 0],
 								[1, 1, 1, 1],
 								[0, 0, 0 ,0],
 								[0, 0, 0, 0]];
 			case 2:
 				// T tetromino
-				this.blks = [ [0, 1, 0],
+				this.blks = [	[0, 1, 0],
 								[1, 1, 1],
 								[0, 0, 0]];
 			case 3:
 				// L tetromino
-				this.blks = [ [0, 0, 1],
+				this.blks = [	[0, 0, 1],
 								[1, 1, 1],
 								[0, 0, 0]];
 			case 4:
 				// J tetromino
-				this.blks = [ [1, 0, 0],
+				this.blks = [	[1, 0, 0],
 								[1, 1, 1],
 								[0, 0, 0]];
 			case 5:
 				// S tetromino
-				this.blks = [ [0, 1, 1],
+				this.blks = [	[0, 1, 1],
 								[1, 1, 0],
 								[0, 0, 0]];
 			case 6:
 				// Z tetromino
-				this.blks = [ [1, 1, 0],
+				this.blks = [	[1, 1, 0],
 								[0, 1, 1],
 								[0, 0, 0]];
 			default:
@@ -61,6 +61,13 @@ class Tetromino {
 	
 	public function rotate() {
 		//function that rotates the tetromino
+		for (i in 0...blks.length) 
+		{
+			for(j in 0...blks[0].length) 
+			{
+				;
+			}
+		}
 	}
 
 	public function x():Int {
