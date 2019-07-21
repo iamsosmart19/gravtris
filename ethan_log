@@ -114,7 +114,7 @@ works, but i hear there is a tetris bible of the correct game
 mechanics to implement in order to get licensed the name "tetris" -
 that would be a good reference to use.
 
-06-16.
+07-16.
 
 computer has been broken for 2 weeks now.
 
@@ -125,3 +125,14 @@ falling by changing offset... easy collision and display plus easi*er*
 rotation.)
 
 that's about it. can't really implement much w/o a computer
+
+07-21.
+
+got computer 2? days ago. very good!
+
+chris implemented: tetrominoes; tetromino display; tetromino rotation (ongoing)
+i implemented: refactored tetromino display; tetrominos falling; remedied tetromino crash
+
+on the roadmap before tuesday: gravity changing; collision detection; player control???
+
+now the block falls! yay
