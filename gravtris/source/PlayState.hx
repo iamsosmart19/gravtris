@@ -16,9 +16,9 @@ class PlayState extends FlxState
 	override public function create():Void
 	{
 		super.create();
-		this.tromino = new Tetromino(0);
+		this.tromino = new Tetromino(2);
 		this.tiles = [for(i in 0...16) [for(j in 0...16) 0]];
-		//mark coords based on Tetromino
+		trominoToTile();
 
 		var size:Int = 20;
 		var gap:Int = 4;
@@ -58,6 +58,8 @@ class PlayState extends FlxState
 		var sprsIter:Iterator<Array<FlxSprite>> = this.sprs.iterator();
 		var curx:Int = 0;
 		var cury:Int = 0;
+
+		trominoToTile();
 		while (tileIter.hasNext() && sprsIter.hasNext()) 
 		{
 			var tileRow:Array<Int> = tileIter.next();
@@ -78,7 +80,25 @@ class PlayState extends FlxState
 			}
 		}
 			
-					
 		super.update(elapsed);
+	}
+
+	public function trominoToTile() 
+	{
+		//mark coords based on Tetromino
+		for(y in 0...this.tromino.blocks().length) 
+		{
+			for(x in 0...this.tromino.blocks()[0].length)
+			{
+				if(this.tromino.blocks()[x][y] == 0)
+				{
+					continue;
+				}
+				else 
+				{
+					tiles[this.tromino.y() + y][this.tromino.x() + x] = 1;
+				}
+			}
+		}
 	}
 }

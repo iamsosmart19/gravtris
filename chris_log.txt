@@ -40,3 +40,6 @@ discussed possible feature additions to the game, such as a campaign mode
 or a level editor
 we also discussed technical details of implementatin of collision detection and rotation.
 
+21/7/19
+discussed the possibility of multiplayer on the same board, using wasd and arrow keys
+
