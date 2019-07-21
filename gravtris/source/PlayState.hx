@@ -15,10 +15,12 @@ class PlayState extends FlxState
 	var tromino:Tetromino;
 	var downinterval:Float;
 	var downtimer:Float;
+	var magicnumber:Int; //for xmino x-1
 	override public function create():Void
 	{
 		super.create();	@:generic
-		this.tiles = [for(i in 0...16) [for(j in 0...16) 0]];
+		this.magicnumber = 3; //needs to be before .tiles
+		this.tiles = prosthetise([for(i in 0...16) [for(j in 0...16) 0]]);
 		this.tromino = new Tetromino(2);
 		this.downinterval = 1.0;
 		this.downtimer = 0.0;
@@ -114,8 +116,31 @@ class PlayState extends FlxState
 
 	public function tromino_plus_tiles(tromino:Tetromino, tiles:Array<Array<Int>>):Array<Array<Int>> {
 	       //trace( offset_matrix(tromino.blocks(), tromino.x(), tromino.y(), tiles[0].length, tiles.length));
-	       return overlay_matrices(tiles, offset_matrix(tromino.blocks(), tromino.x(), tromino.y(), tiles[0].length, tiles.length));
+	       return deprosthetise(overlay_matrices(tiles, offset_matrix(tromino.blocks(), tromino.x()+this.magicnumber, tromino.y()+this.magicnumber, tiles[0].length, tiles.length)));
 	}
-	       
+
+	public function prosthetise(tiles:Array<Array<Int>>):Array<Array<Int>> {
+	       var newtiles:Array<Array<Int>>;
+	       newtiles = [for(i in 0...(tiles.length+(this.magicnumber*2)))  [for(j in 0...(tiles[0].length+(this.magicnumber*2))) -1]];
+	       for (yC in 0...tiles.length) {
+	       	   for (xC in 0...tiles[yC].length) {
+		       newtiles[yC+this.magicnumber][xC+this.magicnumber] = tiles[yC][xC];
+		   }
+	       }
+	       return newtiles;
+	}
+
+	public function deprosthetise(tiles:Array<Array<Int>>):Array<Array<Int>> {
+	       var newtiles:Array<Array<Int>>;
+	       newtiles = [for(i in 0...(tiles.length-(this.magicnumber*2)))  [for(j in 0...(tiles[0].length-(this.magicnumber*2))) 0]];
+	       for (yC in 0...tiles.length) {
+	       	   for (xC in 0...tiles[yC].length) {
+		       if (((yC+this.magicnumber*2)<(tiles.length)) && ((xC+this.magicnumber*2)<(tiles[yC].length))) {
+		       	  newtiles[yC][xC] = tiles[yC+this.magicnumber][xC+this.magicnumber];
+		       }
+		   }
+	       }
+	       return newtiles;
+	}
 }	
 
