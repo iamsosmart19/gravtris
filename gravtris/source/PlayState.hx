@@ -17,7 +17,7 @@ class PlayState extends FlxState
 	var downtimer:Float;
 	override public function create():Void
 	{
-		super.create();
+		super.create();	@:generic
 		this.tiles = [for(i in 0...16) [for(j in 0...16) 0]];
 		this.tromino = new Tetromino(2);
 		this.downinterval = 1.0;
@@ -57,18 +57,16 @@ class PlayState extends FlxState
 	{
 		//update timers
 		this.downtimer += elapsed;
-		trace(this.downtimer);
+		//trace(this.downtimer);
 		if (this.downtimer > this.downinterval) {
 		   this.tromino.down();
 		   this.downtimer = 0.0;
 		}
 		//do something -- anything!
-		var tileIter:Iterator<Array<Int>> = this.tiles.iterator();
+		var realones:Array<Array<Int>> = tromino_plus_tiles(this.tromino, this.tiles);
+		//trace(realones);
+		var tileIter:Iterator<Array<Int>> = realones.iterator();
 		var sprsIter:Iterator<Array<FlxSprite>> = this.sprs.iterator();
-		var curx:Int = 0;
-		var cury:Int = 0;
-
-		trominoToTile();
 		while (tileIter.hasNext() && sprsIter.hasNext()) 
 		{
 			var tileRow:Array<Int> = tileIter.next();
@@ -91,23 +89,33 @@ class PlayState extends FlxState
 			
 		super.update(elapsed);
 	}
-
-	public function trominoToTile() 
-	{
-		//mark coords based on Tetromino
-		for(y in 0...this.tromino.blocks().length) 
-		{
-			for(x in 0...this.tromino.blocks()[0].length)
-			{
-				if(this.tromino.blocks()[x][y] == 0)
-				{
-					continue;
-				}
-				else 
-				{
-					tiles[this.tromino.y() + y][this.tromino.x() + x] = 1;
-				}
-			}
-		}
+	
+	public function offset_matrix(matrix:Array<Array<Int>>, x:Int, y:Int, xSize:Int, ySize:Int):Array<Array<Int>>{
+	       var returnmatrix:Array<Array<Int>>;
+	       returnmatrix = [for(i in 0...ySize) [for(j in 0...xSize) 0]];
+	       for (yC in 0...matrix.length) {
+	       	   for (xC in 0...matrix[yC].length) {
+		       returnmatrix[yC+y][xC+x] = matrix[yC][xC];
+		   }
+	       }
+	       return returnmatrix;
 	}
-}
+	//if m1 and m2 arent the same size when you call this you WILL die
+	public function overlay_matrices(m1:Array<Array<Int>>, m2:Array<Array<Int>>):Array<Array<Int>> {
+	       var returnmatrix:Array<Array<Int>>;
+	       returnmatrix = [for(i in 0...m1.length) [for(j in 0...m1[0].length) 0]];
+	       for (yC in 0...returnmatrix.length) {
+	       	   for (xC in 0...returnmatrix[0].length) {
+		       returnmatrix[yC][xC] = m1[yC][xC] | m2[yC][xC]; //fck it. bitwise or
+		   }
+	       }
+	       return returnmatrix;
+	}
+
+	public function tromino_plus_tiles(tromino:Tetromino, tiles:Array<Array<Int>>):Array<Array<Int>> {
+	       //trace( offset_matrix(tromino.blocks(), tromino.x(), tromino.y(), tiles[0].length, tiles.length));
+	       return overlay_matrices(tiles, offset_matrix(tromino.blocks(), tromino.x(), tromino.y(), tiles[0].length, tiles.length));
+	}
+	       
+}	
+
