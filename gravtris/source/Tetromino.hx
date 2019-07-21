@@ -65,7 +65,7 @@ class Tetromino {
 		{
 			for(j in 0...blks[0].length) 
 			{
-				;
+			//;
 			}
 		}
 	}
@@ -87,11 +87,11 @@ class Tetromino {
 	}
 	       
 	public function up() {
-	       this.yC += 1;
+	       this.yC -= 1;
 	}
 	
 	public function down() {
-	       this.yC -= 1;
+	       this.yC += 1;
 	}
 
 	public function right() {
