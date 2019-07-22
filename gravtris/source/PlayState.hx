@@ -282,6 +282,14 @@ class PlayState extends FlxState
 		      //TODO: super rotation system
 		   }
 		}
+		if (FlxG.keys.justPressed.SPACE) {
+			while(!tromino_collide_tiles(this.tromino, this.tiles)) {
+				this.tromino.down();
+			}
+			this.tromino.up();
+			die();
+		}
+		
 	}
 	public function die() {
 	      if (this.softdrop) {
