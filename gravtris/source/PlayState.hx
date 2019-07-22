@@ -438,14 +438,14 @@ class PlayState extends FlxState
 		var gravitarry:Array<Int> = [];
 		for (i in 0...tiles.length) {
 		    for (j in 0...tiles[i].length) {
-		    	if ((colarray.indexOf(j)!=-1) || (rowarray.indexOf(i1)!=-1)) {
+		    	if ((colarray.indexOf(j)!=-1) || (rowarray.indexOf(i)!=-1)) {
 			   tiles[i][j] = 0;
 			}
 	 	}}
 		for (i in colarray) {
 		    if (i <= this.tiles.length/2) {
 		       gravitarry.push(0);
-		    } else { gravitarry.push(2) }}
+		    } else { gravitarry.push(2); }}
 		for (i in rowarray){
 		    if (i <= this.tiles[0].length/2) {
 		       gravitarry.push(3);
