@@ -435,7 +435,7 @@ class PlayState extends FlxState
 		}
 		for (i in 0...tracker.length) {
 		    if (tracker[i]) { colarray.push(i);}}
-		var gravitarry:Array[Int] = [];
+		var gravitarry:Array<Int> = [];
 		for (i in 0...tiles.length) {
 		    for (j in 0...tiles[i].length) {
 		    	if ((colarray.indexOf(j)!=-1) || (rowarray.indexOf(i1)!=-1)) {
@@ -444,12 +444,12 @@ class PlayState extends FlxState
 	 	}}
 		for (i in colarray) {
 		    if (i <= this.tiles.length/2) {
-		       gravitarry.push(0)
+		       gravitarry.push(0);
 		    } else { gravitarry.push(2) }}
 		for (i in rowarray){
 		    if (i <= this.tiles[0].length/2) {
-		       gravitarry.push(3)
-		    } else { gravitarry.push(1) }}
+		       gravitarry.push(3);
+		    } else { gravitarry.push(1); }}
 		
 		this.tiles = prosthetise(tiles);
 		return gravitarry;
