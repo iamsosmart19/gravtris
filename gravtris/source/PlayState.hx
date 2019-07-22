@@ -31,7 +31,7 @@ class PlayState extends FlxState
 		this.downinterval = 1.0;
 		this.downtimer = 0.0;
 		this.softdrop = false;
-		this.flipScreen = true;
+		this.flipScreen = false;
 		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		this.arrow = new FlxSprite();
 		this.arrow.loadGraphic("assets/images/arrow.png");
@@ -411,30 +411,8 @@ class PlayState extends FlxState
         }
 
 	public function rem_full_lines(tiles:Array<Array<Int>>):Array<Int> {
-	       var rowarray:Array<Int> = [];
-	       var full:Bool = false;
-	       for(index in 0...tiles.length) {
-	       		 full = true;
-			 for (i in tiles[index]) {
-			     if (i == 0) {
-			     	full = false;
-		             }
-			 }
-			 if(full) {
-			 	  rowarray.push(index);
-		         }
-		}
-		var colarray:Array<Int> = [];
-		var tracker:Array<Bool> = [for (x in 0...tiles[0].length) true];
-		for (row in tiles) {
-		    for (i in 0...row.length) {
-		    	if (row[i] == 0) {
-			   tracker[i] = false;
-			}
-	            }
-		}
-		for (i in 0...tracker.length) {
-		    if (tracker[i]) { colarray.push(i);}}
+	       var rowarray:Array<Int> = filled_rows(tiles, false);
+		var colarray:Array<Int> = filled_columns(tiles, false);
 		var gravitarry:Array<Int> = [];
 		for (i in 0...tiles.length) {
 		    for (j in 0...tiles[i].length) {
@@ -444,63 +422,93 @@ class PlayState extends FlxState
 	 	}}
 		for (i in colarray) {
 		    if (i <= this.tiles.length/2) {
-		       gravitarry.push(0);
-		    } else { gravitarry.push(2); }}
-		for (i in rowarray){
-		    if (i <= this.tiles[0].length/2) {
 		       gravitarry.push(3);
 		    } else { gravitarry.push(1); }}
-		
+		for (i in rowarray){
+		    if (i <= this.tiles[0].length/2) {
+		       gravitarry.push(2);
+		    } else { gravitarry.push(0); }}
+		trace(gravitarry);
+		trace(rowarray);
+		trace(colarray);
 		this.tiles = prosthetise(tiles);
 		return gravitarry;
 	}
-	       	       
+
+	public function filled_rows(matrix:Array<Array<Int>>, empty:Bool):Array<Int> {
+	       var rowarray:Array<Int> = [];
+	       var full:Bool = false;
+	       for(index in 0...matrix.length) {
+	       		 full = true;
+			 for (i in matrix[index]) {
+			     if (empty? i!=0 :i == 0) {
+			     	full = false;
+		             }
+			 }
+			 if(full) {
+			 	  rowarray.push(index);
+		         }
+		}
+		return rowarray;
+	}
+	public function filled_columns(tiles:Array<Array<Int>>, empty:Bool):Array<Int> {
+		var colarray:Array<Int> = [];
+		var tracker:Array<Bool> = [for (x in 0...tiles[0].length) true];
+		for (row in tiles) {
+		    for (i in 0...row.length) {
+		    	if (empty? row[i]!=0 : row[i] == 0) {
+			   tracker[i] = false;
+			}
+	            }
+		}
+		for (i in 0...tracker.length) {
+		    if (tracker[i]) { colarray.push(i);}}
+	       	return colarray;
+	}
+	
 	public function spaceFill(gravarray:Array<Int>) {
+	       trace(gravarray);
+	       var dptiles:Array<Array<Int>> = deprosthetise(this.tiles);
+	       var splittiles:Array<Array<Int>>;
 		for(gravdirection in gravarray) {
 			switch (gravdirection) {
 				case 0:
-					for(y in Std.int(this.tiles.length/2)...this.tiles.length-1) {
-						for(x in 0...this.tiles.length) {
-							trace('$x, $y');
-							if(this.tiles[y+1][x] == 0) {
-								this.tiles[y+1][x] = this.tiles[y][x];
-								this.tiles[y][x] = 0;
-							}
-						}
-					}
+				     splittiles = [for(y in Std.int(dptiles.length/2)...dptiles.length) [for(x in 0...dptiles[0].length) dptiles[y][x]]];
+				     for(i in filled_rows(splittiles, true)) { splittiles.splice(i,1); splittiles.unshift([for(x in 0...dptiles[0].length) 0]); }
+				     dptiles = [for(y in 0...Std.int(dptiles.length/2)) [for(x in 0...dptiles[0].length) dptiles[y][x]]].concat(splittiles);
 				case 1:
-					for(x in Std.int(this.tiles.length/2)...this.tiles.length-1) {
-						for(y in 0...this.tiles.length) {
-							trace('$x, $y');
-							if(this.tiles[y][x+1] == 0) {
-								this.tiles[y][x+1] = this.tiles[y][x];
-								this.tiles[y][x] = 0;
-							}
-						}
-					}
+				     splittiles = [for(y in 0...dptiles.length) [for(x in Std.int(dptiles[0].length/2)...dptiles[0].length) dptiles[y][x]]];
+				     for(i in filled_columns(splittiles,true)) {
+				     	   for(row in splittiles) {
+					   	   row.splice(i,1);
+						   row.unshift(0);
+				           }}
+			  	     for(i in 0...splittiles.length) {
+				     	   for(j in 0...splittiles[0].length) {
+					   	 dptiles[i][Std.int(dptiles[0].length/2)+j] = splittiles[i][j];
+						 }
+				     }
 				case 2:
-					for(y in 1...Std.int(this.tiles.length/2)) {
-						for(x in 0...this.tiles.length) {
-							trace('$x, $y');
-							if(this.tiles[y-1][x] == 0) {
-								this.tiles[y-1][x] = this.tiles[y][x];
-								this.tiles[y][x] = 0;
-							}
-						}
-					}
+				     splittiles = [for(y in  0...Std.int(dptiles.length/2)) [for(x in 0...dptiles[0].length) dptiles[y][x]]];
+				     for(i in filled_rows(splittiles, true)) { splittiles.splice(i,1); splittiles.push([for(x in 0...dptiles.length) 0]); }
+				     dptiles = splittiles.concat([for(y in Std.int(dptiles.length/2)...dptiles.length) [for(x in 0...dptiles.length) dptiles[y][x]]]);				
 				case 3:
-					for(x in 1...Std.int(this.tiles.length/2)) {
-						for(y in 0...this.tiles.length) {
-							trace('$x, $y');
-							if(this.tiles[y][x-1] == 0) {
-								this.tiles[y][x-1] = this.tiles[y][x];
-								this.tiles[y][x] = 0;
-							}
-						}
-					}
-				}
+				     splittiles = [for(y in 0...dptiles.length) [for(x in 0...Std.int(dptiles[0].length/2)) dptiles[y][x]]];
+				     for(i in filled_columns(splittiles,true)) {
+				     	   for(row in splittiles) {
+					   	   row.splice(i,1);
+						   row.push(0);
+				           }}
+			  	     for(i in 0...splittiles.length) {
+				     	   for(j in 0...splittiles[0].length) {
+					   	 dptiles[i][j] = splittiles[i][j];
+						 }
+				     }				
 			}
+		
 		}
+		this.tiles = prosthetise(dptiles);
+	}
 	       
 }	
 
