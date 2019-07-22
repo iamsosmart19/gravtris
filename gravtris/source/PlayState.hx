@@ -31,7 +31,7 @@ class PlayState extends FlxState
 		this.downinterval = 1.0;
 		this.downtimer = 0.0;
 		this.softdrop = false;
-		this.flipScreen = true;
+		this.flipScreen = false;
 		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		this.arrow = new FlxSprite();
 		this.arrow.loadGraphic("assets/images/arrow.png");
@@ -368,6 +368,7 @@ class PlayState extends FlxState
 	      this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
 	      this.tromino = new Tetromino(next_bag(), this.flipScreen);
 	      var newgravity:Int = FlxG.random.int(0,3);
+	      rem_full_lines(deprosthetise(this.tiles));
 	      if (this.flipScreen) {
 	      	 var gravity:Int = this.tromino.grav();
 	      	 var newtiles:Array<Array<Int>> = [for(i in 0...tiles.length) [for(j in 0...tiles.length) 0]];
@@ -406,6 +407,54 @@ class PlayState extends FlxState
 			tiles = newtiles;
 		}}
        	      this.tromino.setGravity(newgravity);
+	      this.downtimer = 0;
         }
+
+	public function rem_full_lines(tiles:Array<Array<Int>>):Array<Int> {
+	       var rowarray:Array<Int> = [];
+	       var full:Bool = false;
+	       for(index in 0...tiles.length) {
+	       		 full = true;
+			 for (i in tiles[index]) {
+			     if (i == 0) {
+			     	full = false;
+		             }
+			 }
+			 if(full) {
+			 	  rowarray.push(index);
+		         }
+		}
+		var colarray:Array<Int> = [];
+		var tracker:Array<Bool> = [for (x in 0...tiles[0].length) true];
+		for (row in tiles) {
+		    for (i in 0...row.length) {
+		    	if (row[i] == 0) {
+			   tracker[i] = false;
+			}
+	            }
+		}
+		for (i in 0...tracker.length) {
+		    if (tracker[i]) { colarray.push(i);}}
+		var gravitarry:Array[Int] = [];
+		for (i in 0...tiles.length) {
+		    for (j in 0...tiles[i].length) {
+		    	if ((colarray.indexOf(j)!=-1) || (rowarray.indexOf(i1)!=-1)) {
+			   tiles[i][j] = 0;
+			}
+	 	}}
+		for (i in colarray) {
+		    if (i <= this.tiles.length/2) {
+		       gravitarry.push(0)
+		    } else { gravitarry.push(2) }}
+		for (i in rowarray){
+		    if (i <= this.tiles[0].length/2) {
+		       gravitarry.push(3)
+		    } else { gravitarry.push(1) }}
+		
+		this.tiles = prosthetise(tiles);
+		return gravitarry;
+	}
+	       	       
+	       
 }	
 
