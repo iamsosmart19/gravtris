@@ -20,6 +20,7 @@ class PlayState extends FlxState
 	var magicnumber:Int; //for xmino x-1
 	var softdrop:Bool;
 	var bag:Array<Int>;
+	var arrow:FlxSprite;
 	override public function create():Void
 	{
 		super.create();	
@@ -30,6 +31,11 @@ class PlayState extends FlxState
 		this.downinterval = 1.0;
 		this.downtimer = 0.0;
 		this.softdrop = false;
+		this.arrow = new FlxSprite();
+		this.arrow.loadGraphic("assets/images/arrow.png");
+		add(this.arrow);
+		this.arrow.x = 500;
+		this.arrow.y = 500;
 		//sprite init
 		var size:Int = 20;
 		var gap:Int = 4;
@@ -110,6 +116,12 @@ class PlayState extends FlxState
 				}
 			}
 		}
+
+		switch (this.tromino.grav()) {
+		       case 0: this.arrow.angle = 0;
+		       case 1: this.arrow.angle = 270;
+		       case 2: this.arrow.angle = 180;
+		       case 3: this.arrow.angle = 90;}
 			
 		super.update(elapsed);
 	}
