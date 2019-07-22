@@ -20,9 +20,11 @@ class PlayState extends FlxState
 	var magicnumber:Int; //for xmino x-1
 	var softdrop:Bool;
 	var bag:Array<Int>;
+	var gravity:Int;
 	override public function create():Void
 	{
 		super.create();	
+		gravity = 0;
 		this.magicnumber = 3; //needs to be before .tiles
 		this.tiles = prosthetise([for(i in 0...16) [for(j in 0...16) 0]]);
 		this.bag = [0,1,2,3,4,5,6]; //needs to be before .tromino
@@ -199,75 +201,35 @@ class PlayState extends FlxState
 	}
 
 	public function controls(tromino:Tetromino) {
-	       var relDownPressed:Bool = false;
-	       var relUpPressed:Bool = false;
-	       var relLeftPressed:Bool = false;
-	       var relRightPressed:Bool = false;
-	       var relDownReleased:Bool = false;
-	       switch tromino.grav() {
-	       	      case 0:
-	       	      {
-			relDownPressed = FlxG.keys.justPressed.DOWN;
-			relDownReleased = FlxG.keys.justReleased.DOWN;
-			relUpPressed = FlxG.keys.justPressed.UP;
-			relLeftPressed = FlxG.keys.justPressed.LEFT;
-			relRightPressed = FlxG.keys.justPressed.RIGHT;
-		      };
-		      case 1:
-	       	      {
-			relDownPressed = FlxG.keys.justPressed.RIGHT;
-			relDownReleased = FlxG.keys.justReleased.RIGHT;
-			relUpPressed = FlxG.keys.justPressed.LEFT;
-			relLeftPressed = FlxG.keys.justPressed.UP;
-			relRightPressed = FlxG.keys.justPressed.DOWN;
-		      };		      
-		      case 2:
-	       	      {
-			relDownPressed = FlxG.keys.justPressed.UP;
-			relDownReleased = FlxG.keys.justReleased.UP;
-			relUpPressed = FlxG.keys.justPressed.DOWN;
-			relLeftPressed = FlxG.keys.justPressed.RIGHT;
-			relRightPressed = FlxG.keys.justPressed.LEFT;
-		      };
-		      case 3:
-	       	      {
-			relDownPressed = FlxG.keys.justPressed.LEFT;
-			relDownReleased = FlxG.keys.justReleased.LEFT;
-			relUpPressed = FlxG.keys.justPressed.RIGHT;
-			relLeftPressed = FlxG.keys.justPressed.DOWN;
-			relRightPressed = FlxG.keys.justPressed.UP;
-		      };		      
-		  		      
-		}
-		if (relDownPressed) {
+		if (FlxG.keys.justPressed.DOWN) {
 		   if (!this.softdrop) {
 		      this.downinterval /= 8;
 		      this.softdrop = true;
 		   }
 		}
 
-		if (relDownReleased) {
+		if (FlxG.keys.justReleased.DOWN) {
 		   if (this.softdrop) {
 		      this.downinterval *= 8;
 		      this.softdrop = false;
 		   }
 		}
 
-		if (relLeftPressed) {
+		if (FlxG.keys.justPressed.LEFT) {
 		   this.tromino.left();
 		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
 		      this.tromino.right();
 		   }
 		}
 
-		if (relRightPressed) {
+		if (FlxG.keys.justPressed.RIGHT) {
 		   this.tromino.right();
 		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
 		      this.tromino.left();
 		   }
 		}
 
-		if (FlxG.keys.justPressed.X || relUpPressed) {
+		if (FlxG.keys.anyJustPressed([UP, X])) {
 		   this.tromino.rotateCW();
 		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
 		      this.tromino.rotateCCW();
@@ -292,13 +254,51 @@ class PlayState extends FlxState
 		
 	}
 	public function die() {
-	      if (this.softdrop) {
-	               this.downinterval *= 8;
-		       this.softdrop = false;
-	      }		      
-	      this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
-	      this.tromino = new Tetromino(next_bag());
-       	      this.tromino.setGravity(FlxG.random.int(0,3));
-        }
+		if (this.softdrop) {
+			this.downinterval *= 8;
+			this.softdrop = false;
+		}		      
+		this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
+		this.tromino = new Tetromino(next_bag());
+		var newgravity:Int = FlxG.random.int(0,3);
+		var newtiles:Array<Array<Int>> = [for(i in 0...tiles.length) [for(j in 0...tiles.length) 0]];
+		trace('$newgravity, $gravity, ${newgravity - gravity}');
+		if(newgravity - gravity == 0) {
+			trace('0');
+		}
+		else if(newgravity - gravity < 0) {
+			for(i in 0...(4 - (newgravity - gravity))) 
+			{
+				for (y in 0...tiles.length) 
+				{
+					for(x in 0...tiles.length) 
+					{
+						newtiles[x][y] = tiles[y][x];
+					}
+				}
+				for (row in newtiles) {
+					row.reverse();
+				}
+			}
+			tiles = newtiles;
+		}
+		else {
+			for(i in 0...(newgravity - gravity)) 
+			{
+				for (y in 0...tiles.length) 
+				{
+					for(x in 0...tiles.length) 
+					{
+						newtiles[x][y] = tiles[y][x];
+					}
+				}
+				for (row in newtiles) {
+					row.reverse();
+				}
+			}
+			tiles = newtiles;
+		}
+		this.gravity = newgravity;
+	}
 }	
 
