@@ -12,7 +12,9 @@ class Tetromino {
 	private var xC:Int;
    	private var yC:Int;
 	private var gravity:Int;
-	public function new(type:Int) {
+	private var flip:Bool;
+	private var hiddenGrav:Int;
+	public function new(type:Int, flipScreen:Bool) {
 		switch type {
 			case 0:
 				// O tetromino
@@ -55,6 +57,8 @@ class Tetromino {
 		this.xC = 7;
 		this.yC = 6;
 		this.gravity = 0;
+		this.hiddenGrav = 0;
+		this.flip = flipScreen;
 	}
 
 	public function blocks():Array<Array<Int>> {
@@ -62,11 +66,18 @@ class Tetromino {
 	}
 
 	public function grav():Int {
-	       return this.gravity;
+	       if (!flip) {
+	       	  return this.gravity;
+	       } else {
+	       	  return this.hiddenGrav;
+	       }
 	}
 
 	public function setGravity(grav:Int) {
-	       this.gravity = grav;
+	       if (!flip) {
+	       	  this.gravity = grav;
+		 } else {
+		 this.hiddenGrav = grav;}
 	}
 
 	public function rotateCW() {

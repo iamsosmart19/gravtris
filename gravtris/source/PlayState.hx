@@ -21,19 +21,23 @@ class PlayState extends FlxState
 	var softdrop:Bool;
 	var bag:Array<Int>;
 	var arrow:FlxSprite;
+	var flipScreen:Bool;
 	override public function create():Void
 	{
 		super.create();	
 		this.magicnumber = 3; //needs to be before .tiles
 		this.tiles = prosthetise([for(i in 0...16) [for(j in 0...16) 0]]);
 		this.bag = [0,1,2,3,4,5,6]; //needs to be before .tromino
-		this.tromino = new Tetromino(next_bag());
 		this.downinterval = 1.0;
 		this.downtimer = 0.0;
 		this.softdrop = false;
+		this.flipScreen = true;
+		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		this.arrow = new FlxSprite();
 		this.arrow.loadGraphic("assets/images/arrow.png");
-		add(this.arrow);
+		if (!this.flipScreen) {
+		   add(this.arrow);
+		}
 		this.arrow.x = 500;
 		this.arrow.y = 500;
 		//sprite init
@@ -211,6 +215,7 @@ class PlayState extends FlxState
 	}
 
 	public function controls(tromino:Tetromino) {
+	       if (!this.flipScreen) {
 	       var relDownPressed:Bool = false;
 	       var relUpPressed:Bool = false;
 	       var relLeftPressed:Bool = false;
@@ -301,6 +306,58 @@ class PlayState extends FlxState
 			this.tromino.up();
 			die();
 		}
+		} else {
+		if (FlxG.keys.justPressed.DOWN) {
+		   if (!this.softdrop) {
+		      this.downinterval /= 8;
+		      this.softdrop = true;
+		   }
+		}
+
+		if (FlxG.keys.justReleased.DOWN) {
+		   if (this.softdrop) {
+		      this.downinterval *= 8;
+		      this.softdrop = false;
+		   }
+		}
+
+		if (FlxG.keys.justPressed.LEFT) {
+		   this.tromino.left();
+		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
+		      this.tromino.right();
+		   }
+		}
+
+		if (FlxG.keys.justPressed.RIGHT) {
+		   this.tromino.right();
+		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
+		      this.tromino.left();
+		   }
+		}
+
+		if (FlxG.keys.anyJustPressed([UP, X])) {
+		   this.tromino.rotateCW();
+		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
+		      this.tromino.rotateCCW();
+		      //TODO: super rotation system
+		   }
+		}
+
+		if (FlxG.keys.justPressed.Z) {
+		   this.tromino.rotateCCW();
+		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
+		      this.tromino.rotateCW();
+		      //TODO: super rotation system
+		   }
+		}
+		if (FlxG.keys.justPressed.SPACE) {
+			while(!tromino_collide_tiles(this.tromino, this.tiles)) {
+				this.tromino.down();
+			}
+			this.tromino.up();
+			die();
+		}
+		}
 		
 	}
 	public function die() {
@@ -309,8 +366,46 @@ class PlayState extends FlxState
 		       this.softdrop = false;
 	      }		      
 	      this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
-	      this.tromino = new Tetromino(next_bag());
-       	      this.tromino.setGravity(FlxG.random.int(0,3));
+	      this.tromino = new Tetromino(next_bag(), this.flipScreen);
+	      var newgravity:Int = FlxG.random.int(0,3);
+	      if (this.flipScreen) {
+	      	 var gravity:Int = this.tromino.grav();
+	      	 var newtiles:Array<Array<Int>> = [for(i in 0...tiles.length) [for(j in 0...tiles.length) 0]];
+		 if (newgravity == gravity) {
+		 }
+		 else if(newgravity - gravity < 0) {
+			for(i in 0...(4 - (newgravity - gravity))) 
+			{
+				for (y in 0...tiles.length) 
+				{
+					for(x in 0...tiles.length) 
+					{
+						newtiles[x][y] = tiles[y][x];
+					}
+				}
+				for (row in newtiles) {
+					row.reverse();
+				}
+			}
+			tiles = newtiles;
+		}
+		else {
+			for(i in 0...(newgravity - gravity)) 
+			{
+				for (y in 0...tiles.length) 
+				{
+					for(x in 0...tiles.length) 
+					{
+						newtiles[x][y] = tiles[y][x];
+					}
+				}
+				for (row in newtiles) {
+					row.reverse();
+				}
+			}
+			tiles = newtiles;
+		}}
+       	      this.tromino.setGravity(newgravity);
         }
 }	
 
