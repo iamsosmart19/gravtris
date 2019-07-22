@@ -11,6 +11,7 @@ class Tetromino {
 	private var blks:Array<Array<Int>>;
 	private var xC:Int;
    	private var yC:Int;
+	private var gravity:Int;
 	public function new(type:Int) {
 		switch type {
 			case 0:
@@ -53,12 +54,21 @@ class Tetromino {
 		}
 		this.xC = 7;
 		this.yC = 6;
+		this.gravity = 0;
 	}
 
 	public function blocks():Array<Array<Int>> {
 		return this.blks;
 	}
-	
+
+	public function grav():Int {
+	       return this.gravity;
+	}
+
+	public function setGravity(grav:Int) {
+	       this.gravity = grav;
+	}
+
 	public function rotateCW() {
 		//function that rotates the tetromino
 		var newblks:Array<Array<Int>> = [for(i in 0...blks.length) [for(j in 0...blks.length) 0]];
@@ -110,19 +120,39 @@ class Tetromino {
 	}
 	       
 	public function up() {
-	       this.yC -= 1;
+	       switch this.gravity {
+	       	      case 0: this.yC -= 1;
+		      case 1: this.xC -= 1;
+		      case 2: this.yC += 1;
+		      case 3: this.xC += 1;
+	      }
 	}
 	
 	public function down() {
-	       this.yC += 1;
+	       switch this.gravity {
+	       	      case 0: this.yC += 1;
+		      case 1: this.xC += 1;
+		      case 2: this.yC -= 1;
+		      case 3: this.xC -= 1;
+		}
 	}
 
 	public function right() {
-	       this.xC += 1;
+	       switch this.gravity {
+	       	      case 0: this.xC += 1;
+		      case 1: this.yC += 1;
+		      case 2: this.xC -= 1;
+		      case 3: this.yC -= 1;
+	       }
 	}
 
 	public function left() {
-	       this.xC -= 1;
+	       switch this.gravity {
+	       	      case 0: this.xC -= 1;
+		      case 1: this.yC -= 1;
+		      case 2: this.xC += 1;
+		      case 3: this.yC += 1;
+	       }
 	}
 
 }
