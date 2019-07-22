@@ -31,7 +31,7 @@ class PlayState extends FlxState
 		this.downinterval = 1.0;
 		this.downtimer = 0.0;
 		this.softdrop = false;
-		this.flipScreen = false;
+		this.flipScreen = true;
 		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		this.arrow = new FlxSprite();
 		this.arrow.loadGraphic("assets/images/arrow.png");
@@ -368,7 +368,7 @@ class PlayState extends FlxState
 	      this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
 	      this.tromino = new Tetromino(next_bag(), this.flipScreen);
 	      var newgravity:Int = FlxG.random.int(0,3);
-	      rem_full_lines(deprosthetise(this.tiles));
+	      spaceFill(rem_full_lines(deprosthetise(this.tiles)));
 	      if (this.flipScreen) {
 	      	 var gravity:Int = this.tromino.grav();
 	      	 var newtiles:Array<Array<Int>> = [for(i in 0...tiles.length) [for(j in 0...tiles.length) 0]];
@@ -455,6 +455,52 @@ class PlayState extends FlxState
 		return gravitarry;
 	}
 	       	       
+	public function spaceFill(gravarray:Array<Int>) {
+		for(gravdirection in gravarray) {
+			switch (gravdirection) {
+				case 0:
+					for(y in Std.int(this.tiles.length/2)...this.tiles.length-1) {
+						for(x in 0...this.tiles.length) {
+							trace('$x, $y');
+							if(this.tiles[y+1][x] == 0) {
+								this.tiles[y+1][x] = this.tiles[y][x];
+								this.tiles[y][x] = 0;
+							}
+						}
+					}
+				case 1:
+					for(x in Std.int(this.tiles.length/2)...this.tiles.length-1) {
+						for(y in 0...this.tiles.length) {
+							trace('$x, $y');
+							if(this.tiles[y][x+1] == 0) {
+								this.tiles[y][x+1] = this.tiles[y][x];
+								this.tiles[y][x] = 0;
+							}
+						}
+					}
+				case 2:
+					for(y in 1...Std.int(this.tiles.length/2)) {
+						for(x in 0...this.tiles.length) {
+							trace('$x, $y');
+							if(this.tiles[y-1][x] == 0) {
+								this.tiles[y-1][x] = this.tiles[y][x];
+								this.tiles[y][x] = 0;
+							}
+						}
+					}
+				case 3:
+					for(x in 1...Std.int(this.tiles.length/2)) {
+						for(y in 0...this.tiles.length) {
+							trace('$x, $y');
+							if(this.tiles[y][x-1] == 0) {
+								this.tiles[y][x-1] = this.tiles[y][x];
+								this.tiles[y][x] = 0;
+							}
+						}
+					}
+				}
+			}
+		}
 	       
 }	
 
