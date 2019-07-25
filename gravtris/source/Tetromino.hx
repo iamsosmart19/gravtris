@@ -18,44 +18,44 @@ class Tetromino {
 		switch type {
 			case 0:
 				// O tetromino
-				this.blks = [	[1, 1],
-								[1, 1]];
+				this.blks = [	[5, 5],
+								[5, 5]];
 			case 1:
 				// I tetromino
 				this.blks = [	[0, 0, 0, 0],
-								[1, 1, 1, 1],
+								[2, 2, 2, 2],
 								[0, 0, 0 ,0],
 								[0, 0, 0, 0]];
 			case 2:
 				// T tetromino
-				this.blks = [	[0, 1, 0],
-								[1, 1, 1],
+				this.blks = [	[0, 7, 0],
+								[7, 7, 7],
 								[0, 0, 0]];
 			case 3:
 				// L tetromino
-				this.blks = [	[0, 0, 1],
-								[1, 1, 1],
+				this.blks = [	[0, 0, 4],
+								[4, 4, 4],
 								[0, 0, 0]];
 			case 4:
 				// J tetromino
-				this.blks = [	[1, 0, 0],
-								[1, 1, 1],
+				this.blks = [	[3, 0, 0],
+								[3, 3, 3],
 								[0, 0, 0]];
 			case 5:
 				// S tetromino
-				this.blks = [	[0, 1, 1],
-								[1, 1, 0],
+				this.blks = [	[0, 6, 6],
+								[6, 6, 0],
 								[0, 0, 0]];
 			case 6:
 				// Z tetromino
-				this.blks = [	[1, 1, 0],
-								[0, 1, 1],
+				this.blks = [	[8, 8, 0],
+								[0, 8, 8],
 								[0, 0, 0]];
 			default:
 				this.blks = [for (i in 0...3) [for (i in 0...3) 0]];
 		}
-		this.xC = 7;
-		this.yC = 6;
+		this.xC = 10;
+		this.yC = 10;
 		this.gravity = 0;
 		this.hiddenGrav = 0;
 		this.flip = flipScreen;

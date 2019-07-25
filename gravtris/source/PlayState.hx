@@ -22,16 +22,20 @@ class PlayState extends FlxState
 	var bag:Array<Int>;
 	var arrow:FlxSprite;
 	var flipScreen:Bool;
+	var lineCount:Int;
+	var level:Int;
+	var levelDisp:FlxText;
+	var lineDisp:FlxText;
 	override public function create():Void
 	{
 		super.create();	
 		this.magicnumber = 3; //needs to be before .tiles
-		this.tiles = prosthetise([for(i in 0...16) [for(j in 0...16) 0]]);
+		this.tiles = prosthetise([for(i in 0...24) [for(j in 0...24) 0]]);
 		this.bag = [0,1,2,3,4,5,6]; //needs to be before .tromino
-		this.downinterval = 1.0;
+		this.downinterval = 0.5;
 		this.downtimer = 0.0;
 		this.softdrop = false;
-		this.flipScreen = false;
+		this.flipScreen = true;
 		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		this.arrow = new FlxSprite();
 		this.arrow.loadGraphic("assets/images/arrow.png");
@@ -39,7 +43,9 @@ class PlayState extends FlxState
 		   add(this.arrow);
 		}
 		this.arrow.x = 500;
-		this.arrow.y = 500;
+		this.arrow.y = 250;
+		this.lineCount = 0;
+		this.level = 0;
 		//sprite init
 		var size:Int = 20;
 		var gap:Int = 4;
@@ -47,8 +53,9 @@ class PlayState extends FlxState
 		var curx:Int = gap * 5;
 		var stx:Int = curx;
 		this.sprs = new Array<Array<FlxSprite>>();
-		//16 by 16 matrix, in case it wasnt obvious
-		this.sprs = [ for(i in 0...16) [for(j in 0...16) new FlxSprite().makeGraphic(size, size, FlxColor.WHITE)]];
+		//20 by 20 matrix, in case it wasnt obvious
+		this.sprs = [ for(i in 0...24) [for(j in 0...24) new FlxSprite().makeGraphic(size, size, FlxColor.WHITE)]];
+		var lastx:Int = 0;
 		for (row in this.sprs)
 		{
 		    for (spr in row)
@@ -62,21 +69,30 @@ class PlayState extends FlxState
 		    }
 			//Increments y by the sprite size + the gap (oooh yeah)
 		    cury += size + gap;
+		    lastx = curx;
 		    curx = stx;
 		}
 
-		title = new FlxText(stx + size * 16 + 80, 100, 200);
+		title = new FlxText(lastx + 80, 250, 300);
 		title.text = "GRAVTRIS";	
 		title.setFormat("assets/font.ttf", 24, FlxColor.WHITE, CENTER);
 		title.setBorderStyle(OUTLINE, FlxColor.BLUE, 1);
+		levelDisp = new FlxText(lastx + 80, 270, 300);
+		levelDisp.text = "0";
+		levelDisp.setFormat("assets/font.ttf", 24, FlxColor.WHITE, CENTER);
+		lineDisp = new FlxText(lastx + 80, 290, 300);
+		lineDisp.text = "0";
+		lineDisp.setFormat("assets/font.ttf", 24, FlxColor.WHITE, CENTER);		
 		add(title);
+		add(levelDisp);
+		add(lineDisp);
 	}
 
 	override public function update(elapsed:Float):Void
 	{
 		//update timers
 		this.downtimer += elapsed;
-		////trace(this.downtimer);
+		//////trace(this.downtimer);
 
 		//BEGINNING OF INPUT CODE
 		controls(this.tromino);
@@ -98,7 +114,7 @@ class PlayState extends FlxState
 
 		//BEGINNING OF DISPLAY CODE
 		var realones:Array<Array<Int>> = tromino_plus_tiles(this.tromino, this.tiles);
-		//trace(realones);
+		////trace(realones);
 		var tileIter:Iterator<Array<Int>> = realones.iterator();
 		var sprsIter:Iterator<Array<FlxSprite>> = this.sprs.iterator();
 		while (tileIter.hasNext() && sprsIter.hasNext()) 
@@ -111,13 +127,18 @@ class PlayState extends FlxState
 			{
 				var tile:Int = trowItr.next();				
 				var spr:FlxSprite  = srowItr.next();
-				if (tile == 0)
-				{
-					spr.color = FlxColor.GRAY;
-				} else if (tile == 1)
-				{
-					spr.color = FlxColor.WHITE;
+				switch (tile) {
+				       case 0:	spr.color = FlxColor.GRAY;
+				       case 1:	spr.color = FlxColor.WHITE;
+				       case 2:	spr.color = FlxColor.CYAN;
+				       case 3:	spr.color = FlxColor.BLUE;
+				       case 4:	spr.color = FlxColor.ORANGE;
+				       case 5: 	spr.color = FlxColor.YELLOW;
+				       case 6: 	spr.color = FlxColor.GREEN;
+				       case 7:	spr.color = FlxColor.PURPLE;
+				       case 8:	spr.color = FlxColor.RED;
 				}
+				
 			}
 		}
 
@@ -125,7 +146,8 @@ class PlayState extends FlxState
 		       case 0: this.arrow.angle = 0;
 		       case 1: this.arrow.angle = 270;
 		       case 2: this.arrow.angle = 180;
-		       case 3: this.arrow.angle = 90;}
+		       case 3: this.arrow.angle = 90;
+	       }
 			
 		super.update(elapsed);
 	}
@@ -153,7 +175,7 @@ class PlayState extends FlxState
 	}
 
 	public function tromino_plus_tiles(tromino:Tetromino, tiles:Array<Array<Int>>):Array<Array<Int>> {
-	       ////trace( offset_matrix(tromino.blocks(), tromino.x(), tromino.y(), tiles[0].length, tiles.length));
+	       //////trace( offset_matrix(tromino.blocks(), tromino.x(), tromino.y(), tiles[0].length, tiles.length));
 	       return deprosthetise(overlay_matrices(tiles, offset_matrix(tromino.blocks(), tromino.x()+this.magicnumber, tromino.y()+this.magicnumber, tiles[0].length, tiles.length)));
 	}
 
@@ -367,8 +389,18 @@ class PlayState extends FlxState
 	      }		      
 	      this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
 	      this.tromino = new Tetromino(next_bag(), this.flipScreen);
+	      if (tromino_collide_tiles(this.tromino, this.tiles)) {
+	      	 gameover();
+	      }
 	      var newgravity:Int = FlxG.random.int(0,3);
+	      var prevlines:Int = this.lineCount;
 	      spaceFill(rem_full_lines(deprosthetise(this.tiles)));
+	      this.lineDisp.text = Std.string(this.lineCount);	      
+	      if(Std.int(this.lineCount/10) > Std.int(prevlines/10)) {
+	      	 this.level += 1;
+		 this.downinterval /= 1.2;
+		 this.levelDisp.text = Std.string(this.level);
+	      }
 	      if (this.flipScreen) {
 	      	 var gravity:Int = this.tromino.grav();
 	      	 var newtiles:Array<Array<Int>> = [for(i in 0...tiles.length) [for(j in 0...tiles.length) 0]];
@@ -421,16 +453,18 @@ class PlayState extends FlxState
 			}
 	 	}}
 		for (i in colarray) {
+		    lineCount += 1;
 		    if (i <= this.tiles.length/2) {
 		       gravitarry.push(3);
 		    } else { gravitarry.push(1); }}
 		for (i in rowarray){
+		    lineCount += 1;
 		    if (i <= this.tiles[0].length/2) {
 		       gravitarry.push(2);
 		    } else { gravitarry.push(0); }}
-		trace(gravitarry);
-		trace(rowarray);
-		trace(colarray);
+		//trace(gravitarry);
+		//trace(rowarray);
+		//trace(colarray);
 		this.tiles = prosthetise(tiles);
 		return gravitarry;
 	}
@@ -467,7 +501,7 @@ class PlayState extends FlxState
 	}
 	
 	public function spaceFill(gravarray:Array<Int>) {
-	       trace(gravarray);
+	       //trace(gravarray);
 	       var dptiles:Array<Array<Int>> = deprosthetise(this.tiles);
 	       var splittiles:Array<Array<Int>>;
 		for(gravdirection in gravarray) {
@@ -498,16 +532,21 @@ class PlayState extends FlxState
 				     	   for(row in splittiles) {
 					   	   row.splice(i,1);
 						   row.push(0);
-				           }}
+				           }
+				     }
 			  	     for(i in 0...splittiles.length) {
 				     	   for(j in 0...splittiles[0].length) {
 					   	 dptiles[i][j] = splittiles[i][j];
-						 }
+					   }
 				     }				
 			}
 		
 		}
 		this.tiles = prosthetise(dptiles);
+	}
+
+	public function gameover() {
+	       trace("You Lose!");
 	}
 	       
 }	
