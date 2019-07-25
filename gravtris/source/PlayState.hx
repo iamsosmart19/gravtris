@@ -26,6 +26,8 @@ class PlayState extends FlxState
 	var level:Int;
 	var levelDisp:FlxText;
 	var lineDisp:FlxText;
+	var moveTimer:Float;
+	var moveInterval:Float;
 	override public function create():Void
 	{
 		super.create();	
@@ -46,6 +48,8 @@ class PlayState extends FlxState
 		this.arrow.y = 250;
 		this.lineCount = 0;
 		this.level = 0;
+		this.moveTimer = 0;
+		this.moveInterval = 0.05;
 		//sprite init
 		var size:Int = 20;
 		var gap:Int = 4;
@@ -93,7 +97,7 @@ class PlayState extends FlxState
 		//update timers
 		this.downtimer += elapsed;
 		//////trace(this.downtimer);
-
+		this.moveTimer += elapsed;
 		//BEGINNING OF INPUT CODE
 		controls(this.tromino);
 		//END OF INPUT CODE
@@ -249,32 +253,32 @@ class PlayState extends FlxState
 			relDownPressed = FlxG.keys.justPressed.DOWN;
 			relDownReleased = FlxG.keys.justReleased.DOWN;
 			relUpPressed = FlxG.keys.justPressed.UP;
-			relLeftPressed = FlxG.keys.justPressed.LEFT;
-			relRightPressed = FlxG.keys.justPressed.RIGHT;
+			relLeftPressed = FlxG.keys.pressed.LEFT;
+			relRightPressed = FlxG.keys.pressed.RIGHT;
 		      };
 		      case 1:
 	       	      {
 			relDownPressed = FlxG.keys.justPressed.RIGHT;
 			relDownReleased = FlxG.keys.justReleased.RIGHT;
 			relUpPressed = FlxG.keys.justPressed.LEFT;
-			relLeftPressed = FlxG.keys.justPressed.UP;
-			relRightPressed = FlxG.keys.justPressed.DOWN;
+			relLeftPressed = FlxG.keys.pressed.UP;
+			relRightPressed = FlxG.keys.pressed.DOWN;
 		      };		      
 		      case 2:
 	       	      {
 			relDownPressed = FlxG.keys.justPressed.UP;
 			relDownReleased = FlxG.keys.justReleased.UP;
 			relUpPressed = FlxG.keys.justPressed.DOWN;
-			relLeftPressed = FlxG.keys.justPressed.RIGHT;
-			relRightPressed = FlxG.keys.justPressed.LEFT;
+			relLeftPressed = FlxG.keys.pressed.RIGHT;
+			relRightPressed = FlxG.keys.pressed.LEFT;
 		      };
 		      case 3:
 	       	      {
 			relDownPressed = FlxG.keys.justPressed.LEFT;
 			relDownReleased = FlxG.keys.justReleased.LEFT;
 			relUpPressed = FlxG.keys.justPressed.RIGHT;
-			relLeftPressed = FlxG.keys.justPressed.DOWN;
-			relRightPressed = FlxG.keys.justPressed.UP;
+			relLeftPressed = FlxG.keys.pressed.DOWN;
+			relRightPressed = FlxG.keys.pressed.UP;
 		      };		      
 		  		      
 		}
@@ -293,16 +297,22 @@ class PlayState extends FlxState
 		}
 
 		if (relLeftPressed) {
-		   this.tromino.left();
-		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
-		      this.tromino.right();
-		   }
+		   if (this.moveTimer > this.moveInterval) {
+		      		   this.moveTimer = 0;
+		   		   this.tromino.left();
+		   		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
+				   		      this.tromino.right();
+				   }
+	           }
 		}
 
 		if (relRightPressed) {
-		   this.tromino.right();
-		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
-		      this.tromino.left();
+		   if (this.moveTimer > this.moveInterval) {
+		      this.moveTimer = 0;
+		      this.tromino.right();
+		      if (tromino_collide_tiles(this.tromino, this.tiles)) {
+		      	 this.tromino.left();
+		      }
 		   }
 		}
 
@@ -343,17 +353,23 @@ class PlayState extends FlxState
 		   }
 		}
 
-		if (FlxG.keys.justPressed.LEFT) {
-		   this.tromino.left();
-		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
-		      this.tromino.right();
+		if (FlxG.keys.pressed.LEFT) {
+		   if (this.moveTimer > this.moveInterval) {
+		           this.moveTimer = 0;
+        		   this.tromino.left();
+		           if (tromino_collide_tiles(this.tromino, this.tiles)) {
+		               this.tromino.right();
+		           }
 		   }
 		}
 
-		if (FlxG.keys.justPressed.RIGHT) {
+		if (FlxG.keys.pressed.RIGHT) {
+		   if (this.moveTimer > this.moveInterval) {
+		   this.moveTimer = 0;
 		   this.tromino.right();
 		   if (tromino_collide_tiles(this.tromino, this.tiles)) {
 		      this.tromino.left();
+		   }
 		   }
 		}
 
