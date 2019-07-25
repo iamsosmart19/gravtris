@@ -432,6 +432,15 @@ class PlayState extends FlxState {
 			this.softdrop = false;
 		}
 		this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
+		if (this.flipScreen) {
+			haxe.Timer.delay(newtromino.bind(), Std.int(this.pauseInterval * 1000));
+		}
+		rotate();
+		this.downtimer = 0;
+		this.justDropped = true;
+		//Sys.sleep(0.1);
+	}
+	public function newtromino():Void {
 		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		if (tromino_collide_tiles(this.tromino, this.tiles)) {
 			gameover();
@@ -444,12 +453,6 @@ class PlayState extends FlxState {
 			this.downinterval /= 1.2;
 			this.levelDisp.text = Std.string(this.level);
 		}
-		if (this.flipScreen) {
-			haxe.Timer.delay(rotate.bind(), Std.int(this.pauseInterval * 1000));
-		}
-		this.downtimer = 0;
-		this.justDropped = true;
-		//Sys.sleep(0.1);
 	}
 
 	public function rotate():Void {
