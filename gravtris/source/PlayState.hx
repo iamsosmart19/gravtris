@@ -51,7 +51,7 @@ class PlayState extends FlxState {
 		this.moveTimer = 0;
 		this.moveInterval = 0.1;
 		this.justDropped = false;
-		this.pauseInterval = 0.1;
+		this.pauseInterval = 0.01;
 		this.pauseTimer = 0.0;
 		// sprite init
 		var size:Int = 20;
