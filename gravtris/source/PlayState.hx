@@ -39,7 +39,7 @@ class PlayState extends FlxState {
 		this.downinterval = 0.5;
 		this.downtimer = 0.0;
 		this.softdrop = false;
-		this.flipScreen = false;
+		this.flipScreen = true;
 		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		this.arrow = new FlxSprite();
 		this.arrow.loadGraphic("assets/images/arrow.png");
@@ -51,7 +51,7 @@ class PlayState extends FlxState {
 		this.moveTimer = 0;
 		this.moveInterval = 0.1;
 		this.justDropped = false;
-		this.pauseInterval = 0.8;
+		this.pauseInterval = 0.1;
 		this.pauseTimer = 0.0;
 		// sprite init
 		var size:Int = 20;
