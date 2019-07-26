@@ -51,7 +51,7 @@ class PlayState extends FlxState {
 		this.lineCount = 0;
 		this.level = 0;
 		this.moveTimer = 0;
-		this.moveInterval = 0.2;
+		this.moveInterval = 0.1;
 		this.justDropped = false;
 		this.pauseInterval = 0.8;
 		this.pauseTimer = 0.0;
@@ -99,23 +99,25 @@ class PlayState extends FlxState {
 
 	override public function update(elapsed:Float):Void {
 		// update timers
-		if(this.justDropped) { 
+		if(this.justDropped && (this.flipScreen)) { 
 			this.pauseTimer += elapsed;
 		}
 		else {
 			this.downtimer += elapsed;
 			this.moveTimer += elapsed;
 		}
-		trace(this.pauseTimer);
-		trace(this.justDropped);
-		//////trace(this.downtimer);
+		//trace(this.pauseTimer);
+		////trace(this.justDropped);
+		////////trace(this.downtimer);
 		if(this.pauseTimer > this.pauseInterval) {
 			this.justDropped = false;
 			this.pauseTimer = 0.0;
 		}
 
-		if (this.justDropped == false || !(this.flipScreen)) { 
+		if (this.justDropped == false || !(this.flipScreen)) {
+		   	//trace ( this.downtimer );
 			// BEGINNING OF INPUT CODE
+			trace(this.pauseTimer);
 			controls(this.tromino);
 			// END OF INPUT CODE
 			// TODO -- REFACTOR INPUT
@@ -135,7 +137,7 @@ class PlayState extends FlxState {
 
 			// BEGINNING OF DISPLAY CODE
 			var realones:Array<Array<Int>> = tromino_plus_tiles(this.tromino, this.tiles);
-			////trace(realones);
+			//////trace(realones);
 			var tileIter:Iterator<Array<Int>> = realones.iterator();
 			var sprsIter:Iterator<Array<FlxSprite>> = this.sprs.iterator();
 			while (tileIter.hasNext() && sprsIter.hasNext()) {
@@ -208,7 +210,7 @@ class PlayState extends FlxState {
 	}
 
 	public function tromino_plus_tiles(tromino:Tetromino, tiles:Array<Array<Int>>):Array<Array<Int>> {
-		//////trace( offset_matrix(tromino.blocks(), tromino.x(), tromino.y(), tiles[0].length, tiles.length));
+		////////trace( offset_matrix(tromino.blocks(), tromino.x(), tromino.y(), tiles[0].length, tiles.length));
 		return deprosthetise(overlay_matrices(tiles,
 			offset_matrix(tromino.blocks(), tromino.x() + this.magicnumber, tromino.y() + this.magicnumber, tiles[0].length, tiles.length)));
 	}
@@ -444,6 +446,7 @@ class PlayState extends FlxState {
 		}
 		else {
 			newtromino();
+			rotate();
 		}
 		this.downtimer = 0;
 		this.justDropped = true;
@@ -466,6 +469,7 @@ class PlayState extends FlxState {
 
 	public function rotate():Void {
 		var newgravity:Int = FlxG.random.int(0, 3);
+		if (this.flipScreen) {
 		var gravity:Int = this.tromino.grav();
 		var newtiles:Array<Array<Int>> = [for (i in 0...tiles.length) [for (j in 0...tiles.length) 0]];
 		if (newgravity == gravity) {} else if (newgravity - gravity < 0) {
@@ -492,8 +496,9 @@ class PlayState extends FlxState {
 				}
 			}
 			tiles = newtiles;
-		}
+		}}
 		this.tromino.setGravity(newgravity);
+		trace(this.tromino.grav());
 	}
 
 	public function rem_full_lines(tiles:Array<Array<Int>>):Array<Int> {
@@ -523,9 +528,9 @@ class PlayState extends FlxState {
 				gravitarry.push(0);
 			}
 		}
-		// trace(gravitarry);
-		// trace(rowarray);
-		// trace(colarray);
+		// //trace(gravitarry);
+		// //trace(rowarray);
+		// //trace(colarray);
 		this.tiles = prosthetise(tiles);
 		return gravitarry;
 	}
@@ -566,7 +571,7 @@ class PlayState extends FlxState {
 	}
 
 	public function spaceFill(gravarray:Array<Int>) {
-		// trace(gravarray);
+		// //trace(gravarray);
 		var dptiles:Array<Array<Int>> = deprosthetise(this.tiles);
 		var splittiles:Array<Array<Int>>;
 		for (gravdirection in gravarray) {
