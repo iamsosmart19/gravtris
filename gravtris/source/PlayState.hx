@@ -39,7 +39,7 @@ class PlayState extends FlxState {
 		this.downinterval = 0.5;
 		this.downtimer = 0.0;
 		this.softdrop = false;
-		this.flipScreen = false;
+		this.flipScreen = true;
 		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		this.arrow = new FlxSprite();
 		this.arrow.loadGraphic("assets/images/arrow.png");
@@ -438,12 +438,9 @@ class PlayState extends FlxState {
 			this.softdrop = false;
 		}
 		this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
+		newtromino();
 		if (this.flipScreen) {
-			haxe.Timer.delay(newtromino.bind(), Std.int(this.pauseInterval * 1000));
 			haxe.Timer.delay(rotate.bind(), Std.int(this.pauseInterval * 1000));
-		}
-		else {
-			newtromino();
 		}
 		this.downtimer = 0;
 		this.justDropped = true;
