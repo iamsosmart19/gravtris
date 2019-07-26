@@ -48,7 +48,7 @@ class PlayState extends FlxState {
 		this.lineCount = 0;
 		this.level = 0;
 		this.moveTimer = 0;
-		this.moveInterval = 0.05;
+		this.moveInterval = 0.2;
 		// sprite init
 		var size:Int = 20;
 		var gap:Int = 4;
