@@ -46,8 +46,6 @@ class PlayState extends FlxState {
 		if (!this.flipScreen) {
 			add(this.arrow);
 		}
-		this.arrow.x = 500;
-		this.arrow.y = 250;
 		this.lineCount = 0;
 		this.level = 0;
 		this.moveTimer = 0;
@@ -92,9 +90,11 @@ class PlayState extends FlxState {
 		lineDisp = new FlxText(lastx + 80, 290, 300);
 		lineDisp.text = "0";
 		lineDisp.setFormat("assets/font.ttf", 24, FlxColor.WHITE, CENTER);
+		arrow.x = lastx + 80;
+		arrow.y = 310;
 		add(title);
 		add(levelDisp);
-		add(lineDisp);
+		add(lineDisp);		
 	}
 
 	override public function update(elapsed:Float):Void {
@@ -440,18 +440,19 @@ class PlayState extends FlxState {
 			this.softdrop = false;
 		}
 		this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
+		newtromino();
 		if (this.flipScreen) {
-			haxe.Timer.delay(newtromino.bind(), Std.int(this.pauseInterval * 1000));
 			haxe.Timer.delay(rotate.bind(), Std.int(this.pauseInterval * 1000));
 		}
 		else {
-			newtromino();
 			rotate();
 		}
 		this.downtimer = 0;
 		this.justDropped = true;
 		//Sys.sleep(0.1);
 	}
+
+	//need to define recreate gravity in this as well
 	public function newtromino():Void {
 		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		if (tromino_collide_tiles(this.tromino, this.tiles)) {
@@ -464,6 +465,10 @@ class PlayState extends FlxState {
 			this.level += 1;
 			this.downinterval /= 1.2;
 			this.levelDisp.text = Std.string(this.level);
+		}
+		if (!this.flipScreen) {
+			var newgravity:Int = FlxG.random.int(0, 3);
+			this.tromino.setGravity(newgravity);
 		}
 	}
 

@@ -1,0 +1,9 @@
+Feature								Status
+Screens (start, game over, etc)
+Points
+SRS
+dynamic board size
+pause after block dropped			put the functions in the right order and it'll probably work, gtg sleep 
+comments
+create board class
+multiplayer 
