@@ -1,7 +1,7 @@
 Feature								implementer		Status
 Screens (start, game over, etc)		
 Points								
-SRS									
+SRS									Chris
 dynamic board size					
 comments							Chris			
 create board class					
