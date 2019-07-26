@@ -449,6 +449,8 @@ class PlayState extends FlxState {
 		this.justDropped = true;
 		//Sys.sleep(0.1);
 	}
+
+	//need to define recreate gravity in this as well
 	public function newtromino():Void {
 		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		if (tromino_collide_tiles(this.tromino, this.tiles)) {
@@ -461,6 +463,10 @@ class PlayState extends FlxState {
 			this.level += 1;
 			this.downinterval /= 1.2;
 			this.levelDisp.text = Std.string(this.level);
+		}
+		if (!this.flipScreen) {
+			var newgravity:Int = FlxG.random.int(0, 3);
+			this.tromino.setGravity(newgravity);
 		}
 	}
 
