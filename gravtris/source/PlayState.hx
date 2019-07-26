@@ -19,7 +19,7 @@ class PlayState extends FlxState {
 	var bag:Array<Int>; // possible tetrominos
 	var arrow:FlxSprite;
 	var flipScreen:Bool; // screen flip option
-	var lineCount:Int; 
+	var lineCount:Int;
 	var level:Int;
 	var levelDisp:FlxText;
 	var lineDisp:FlxText;
@@ -94,28 +94,27 @@ class PlayState extends FlxState {
 		arrow.y = 310;
 		add(title);
 		add(levelDisp);
-		add(lineDisp);		
+		add(lineDisp);
 	}
 
 	override public function update(elapsed:Float):Void {
 		// update timers
-		if(this.justDropped && (this.flipScreen)) { 
+		if (this.justDropped && (this.flipScreen)) {
 			this.pauseTimer += elapsed;
-		}
-		else {
+		} else {
 			this.downtimer += elapsed;
 			this.moveTimer += elapsed;
 		}
-		//trace(this.pauseTimer);
+		// trace(this.pauseTimer);
 		////trace(this.justDropped);
 		////////trace(this.downtimer);
-		if(this.pauseTimer > this.pauseInterval) {
+		if (this.pauseTimer > this.pauseInterval) {
 			this.justDropped = false;
 			this.pauseTimer = 0.0;
 		}
 
 		if (this.justDropped == false || !(this.flipScreen)) {
-		   	//trace ( this.downtimer );
+			// trace ( this.downtimer );
 			// BEGINNING OF INPUT CODE
 			trace(this.pauseTimer);
 			controls(this.tromino);
@@ -127,7 +126,7 @@ class PlayState extends FlxState {
 				this.tromino.down();
 				if (tromino_collide_tiles(this.tromino, this.tiles)) {
 					this.tromino.up();
-					//haxe.Timer.delay(die.bind(), 200);
+					// haxe.Timer.delay(die.bind(), 200);
 					die();
 				}
 				this.downtimer = 0.0;
@@ -371,7 +370,7 @@ class PlayState extends FlxState {
 				}
 				this.tromino.up();
 				die();
-				//haxe.Timer.delay(die.bind(), 200);
+				// haxe.Timer.delay(die.bind(), 200);
 			}
 		} else {
 			if (FlxG.keys.justPressed.DOWN) {
@@ -429,7 +428,7 @@ class PlayState extends FlxState {
 				}
 				this.tromino.up();
 				die();
-				//haxe.Timer.delay(die.bind(), 200);
+				// haxe.Timer.delay(die.bind(), 200);
 			}
 		}
 	}
@@ -443,16 +442,15 @@ class PlayState extends FlxState {
 		newtromino();
 		if (this.flipScreen) {
 			haxe.Timer.delay(rotate.bind(), Std.int(this.pauseInterval * 1000));
-		}
-		else {
+		} else {
 			rotate();
 		}
 		this.downtimer = 0;
 		this.justDropped = true;
-		//Sys.sleep(0.1);
+		// Sys.sleep(0.1);
 	}
 
-	//need to define recreate gravity in this as well
+	// need to define recreate gravity in this as well
 	public function newtromino():Void {
 		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		if (tromino_collide_tiles(this.tromino, this.tiles)) {
@@ -475,33 +473,34 @@ class PlayState extends FlxState {
 	public function rotate():Void {
 		var newgravity:Int = FlxG.random.int(0, 3);
 		if (this.flipScreen) {
-		var gravity:Int = this.tromino.grav();
-		var newtiles:Array<Array<Int>> = [for (i in 0...tiles.length) [for (j in 0...tiles.length) 0]];
-		if (newgravity == gravity) {} else if (newgravity - gravity < 0) {
-			for (i in 0...(4 - (newgravity - gravity))) {
-				for (y in 0...tiles.length) {
-					for (x in 0...tiles.length) {
-						newtiles[x][y] = tiles[y][x];
+			var gravity:Int = this.tromino.grav();
+			var newtiles:Array<Array<Int>> = [for (i in 0...tiles.length) [for (j in 0...tiles.length) 0]];
+			if (newgravity == gravity) {} else if (newgravity - gravity < 0) {
+				for (i in 0...(4 - (newgravity - gravity))) {
+					for (y in 0...tiles.length) {
+						for (x in 0...tiles.length) {
+							newtiles[x][y] = tiles[y][x];
+						}
+					}
+					for (row in newtiles) {
+						row.reverse();
 					}
 				}
-				for (row in newtiles) {
-					row.reverse();
-				}
-			}
-			tiles = newtiles;
-		} else {
-			for (i in 0...(newgravity - gravity)) {
-				for (y in 0...tiles.length) {
-					for (x in 0...tiles.length) {
-						newtiles[x][y] = tiles[y][x];
+				tiles = newtiles;
+			} else {
+				for (i in 0...(newgravity - gravity)) {
+					for (y in 0...tiles.length) {
+						for (x in 0...tiles.length) {
+							newtiles[x][y] = tiles[y][x];
+						}
+					}
+					for (row in newtiles) {
+						row.reverse();
 					}
 				}
-				for (row in newtiles) {
-					row.reverse();
-				}
+				tiles = newtiles;
 			}
-			tiles = newtiles;
-		}}
+		}
 		this.tromino.setGravity(newgravity);
 		trace(this.tromino.grav());
 	}
