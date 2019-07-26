@@ -10,23 +10,26 @@ import flixel.math.FlxRandom;
 import flixel.FlxG;
 
 class PlayState extends FlxState {
-	var tiles:Array<Array<Int>>;
-	var sprs:Array<Array<FlxSprite>>;
-	var title:FlxText;
-	var tromino:Tetromino;
-	var downinterval:Float;
-	var downtimer:Float;
+	var tiles:Array<Array<Int>>; // stores tile values (filled, colour)
+	var sprs:Array<Array<FlxSprite>>; // displays tiles to screen
+	var title:FlxText; // come on bro
+	var tromino:Tetromino; // tetromino used in game
 	var magicnumber:Int; // for xmino x-1
-	var softdrop:Bool;
-	var bag:Array<Int>;
+	var softdrop:Bool; // bruh
+	var bag:Array<Int>; // possible tetrominos
 	var arrow:FlxSprite;
-	var flipScreen:Bool;
-	var lineCount:Int;
+	var flipScreen:Bool; // screen flip option
+	var lineCount:Int; 
 	var level:Int;
 	var levelDisp:FlxText;
 	var lineDisp:FlxText;
-	var moveTimer:Float;
+	var downinterval:Float; // time for tromino to be dropped
+	var downtimer:Float; // checks time till downinterval has passed, then reset to 0
+	var moveTimer:Float; // timer for mov
 	var moveInterval:Float;
+	var justDropped:Bool;
+	var pauseTimer:Float; // checks time till pauseInterval has passed, then reset to 0
+	var pauseInterval:Float; // time after tromino has been dropped
 
 	override public function create():Void {
 		super.create();
@@ -36,7 +39,7 @@ class PlayState extends FlxState {
 		this.downinterval = 0.5;
 		this.downtimer = 0.0;
 		this.softdrop = false;
-		this.flipScreen = true;
+		this.flipScreen = false;
 		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		this.arrow = new FlxSprite();
 		this.arrow.loadGraphic("assets/images/arrow.png");
@@ -49,6 +52,9 @@ class PlayState extends FlxState {
 		this.level = 0;
 		this.moveTimer = 0;
 		this.moveInterval = 0.2;
+		this.justDropped = false;
+		this.pauseInterval = 0.8;
+		this.pauseTimer = 0.0;
 		// sprite init
 		var size:Int = 20;
 		var gap:Int = 4;
@@ -93,71 +99,86 @@ class PlayState extends FlxState {
 
 	override public function update(elapsed:Float):Void {
 		// update timers
-		this.downtimer += elapsed;
+		if(this.justDropped) { 
+			this.pauseTimer += elapsed;
+		}
+		else {
+			this.downtimer += elapsed;
+			this.moveTimer += elapsed;
+		}
+		trace(this.pauseTimer);
+		trace(this.justDropped);
 		//////trace(this.downtimer);
-		this.moveTimer += elapsed;
-		// BEGINNING OF INPUT CODE
-		controls(this.tromino);
-		// END OF INPUT CODE
-		// TODO -- REFACTOR INPUT
-
-		// TODO: CONTROLS LINKED TO SINGLE TETROMINOS
-		if (this.downtimer > this.downinterval) {
-			this.tromino.down();
-			if (tromino_collide_tiles(this.tromino, this.tiles)) {
-				this.tromino.up();
-				die();
-			}
-			this.downtimer = 0.0;
+		if(this.pauseTimer > this.pauseInterval) {
+			this.justDropped = false;
+			this.pauseTimer = 0.0;
 		}
 
-		// END OF GAMEPLAY CODE
+		if (this.justDropped == false || !(this.flipScreen)) { 
+			// BEGINNING OF INPUT CODE
+			controls(this.tromino);
+			// END OF INPUT CODE
+			// TODO -- REFACTOR INPUT
 
-		// BEGINNING OF DISPLAY CODE
-		var realones:Array<Array<Int>> = tromino_plus_tiles(this.tromino, this.tiles);
-		////trace(realones);
-		var tileIter:Iterator<Array<Int>> = realones.iterator();
-		var sprsIter:Iterator<Array<FlxSprite>> = this.sprs.iterator();
-		while (tileIter.hasNext() && sprsIter.hasNext()) {
-			var tileRow:Array<Int> = tileIter.next();
-			var sprsRow:Array<FlxSprite> = sprsIter.next();
-			var trowItr:Iterator<Int> = tileRow.iterator();
-			var srowItr:Iterator<FlxSprite> = sprsRow.iterator();
-			while (trowItr.hasNext() && srowItr.hasNext()) {
-				var tile:Int = trowItr.next();
-				var spr:FlxSprite = srowItr.next();
-				switch (tile) {
-					case 0:
-						spr.color = FlxColor.GRAY;
-					case 1:
-						spr.color = FlxColor.WHITE;
-					case 2:
-						spr.color = FlxColor.CYAN;
-					case 3:
-						spr.color = FlxColor.BLUE;
-					case 4:
-						spr.color = FlxColor.ORANGE;
-					case 5:
-						spr.color = FlxColor.YELLOW;
-					case 6:
-						spr.color = FlxColor.GREEN;
-					case 7:
-						spr.color = FlxColor.PURPLE;
-					case 8:
-						spr.color = FlxColor.RED;
+			// TODO: CONTROLS LINKED TO SINGLE TETROMINOS
+			if (this.downtimer > this.downinterval) {
+				this.tromino.down();
+				if (tromino_collide_tiles(this.tromino, this.tiles)) {
+					this.tromino.up();
+					//haxe.Timer.delay(die.bind(), 200);
+					die();
+				}
+				this.downtimer = 0.0;
+			}
+
+			// END OF GAMEPLAY CODE
+
+			// BEGINNING OF DISPLAY CODE
+			var realones:Array<Array<Int>> = tromino_plus_tiles(this.tromino, this.tiles);
+			////trace(realones);
+			var tileIter:Iterator<Array<Int>> = realones.iterator();
+			var sprsIter:Iterator<Array<FlxSprite>> = this.sprs.iterator();
+			while (tileIter.hasNext() && sprsIter.hasNext()) {
+				var tileRow:Array<Int> = tileIter.next();
+				var sprsRow:Array<FlxSprite> = sprsIter.next();
+				var trowItr:Iterator<Int> = tileRow.iterator();
+				var srowItr:Iterator<FlxSprite> = sprsRow.iterator();
+				while (trowItr.hasNext() && srowItr.hasNext()) {
+					var tile:Int = trowItr.next();
+					var spr:FlxSprite = srowItr.next();
+					switch (tile) {
+						case 0:
+							spr.color = FlxColor.GRAY;
+						case 1:
+							spr.color = FlxColor.WHITE;
+						case 2:
+							spr.color = FlxColor.CYAN;
+						case 3:
+							spr.color = FlxColor.BLUE;
+						case 4:
+							spr.color = FlxColor.ORANGE;
+						case 5:
+							spr.color = FlxColor.YELLOW;
+						case 6:
+							spr.color = FlxColor.GREEN;
+						case 7:
+							spr.color = FlxColor.PURPLE;
+						case 8:
+							spr.color = FlxColor.RED;
+					}
 				}
 			}
-		}
 
-		switch (this.tromino.grav()) {
-			case 0:
-				this.arrow.angle = 0;
-			case 1:
-				this.arrow.angle = 270;
-			case 2:
-				this.arrow.angle = 180;
-			case 3:
-				this.arrow.angle = 90;
+			switch (this.tromino.grav()) {
+				case 0:
+					this.arrow.angle = 0;
+				case 1:
+					this.arrow.angle = 270;
+				case 2:
+					this.arrow.angle = 180;
+				case 3:
+					this.arrow.angle = 90;
+			}
 		}
 
 		super.update(elapsed);
@@ -348,6 +369,7 @@ class PlayState extends FlxState {
 				}
 				this.tromino.up();
 				die();
+				//haxe.Timer.delay(die.bind(), 200);
 			}
 		} else {
 			if (FlxG.keys.justPressed.DOWN) {
@@ -405,21 +427,33 @@ class PlayState extends FlxState {
 				}
 				this.tromino.up();
 				die();
+				//haxe.Timer.delay(die.bind(), 200);
 			}
 		}
 	}
 
-	public function die() {
+	public function die():Void {
 		if (this.softdrop) {
 			this.downinterval *= 8;
 			this.softdrop = false;
 		}
 		this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
+		if (this.flipScreen) {
+			haxe.Timer.delay(newtromino.bind(), Std.int(this.pauseInterval * 1000));
+			haxe.Timer.delay(rotate.bind(), Std.int(this.pauseInterval * 1000));
+		}
+		else {
+			newtromino();
+		}
+		this.downtimer = 0;
+		this.justDropped = true;
+		//Sys.sleep(0.1);
+	}
+	public function newtromino():Void {
 		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		if (tromino_collide_tiles(this.tromino, this.tiles)) {
 			gameover();
 		}
-		var newgravity:Int = FlxG.random.int(0, 3);
 		var prevlines:Int = this.lineCount;
 		spaceFill(rem_full_lines(deprosthetise(this.tiles)));
 		this.lineDisp.text = Std.string(this.lineCount);
@@ -428,37 +462,38 @@ class PlayState extends FlxState {
 			this.downinterval /= 1.2;
 			this.levelDisp.text = Std.string(this.level);
 		}
-		if (this.flipScreen) {
-			var gravity:Int = this.tromino.grav();
-			var newtiles:Array<Array<Int>> = [for (i in 0...tiles.length) [for (j in 0...tiles.length) 0]];
-			if (newgravity == gravity) {} else if (newgravity - gravity < 0) {
-				for (i in 0...(4 - (newgravity - gravity))) {
-					for (y in 0...tiles.length) {
-						for (x in 0...tiles.length) {
-							newtiles[x][y] = tiles[y][x];
-						}
-					}
-					for (row in newtiles) {
-						row.reverse();
-					}
-				}
-				tiles = newtiles;
-			} else {
-				for (i in 0...(newgravity - gravity)) {
-					for (y in 0...tiles.length) {
-						for (x in 0...tiles.length) {
-							newtiles[x][y] = tiles[y][x];
-						}
-					}
-					for (row in newtiles) {
-						row.reverse();
+	}
+
+	public function rotate():Void {
+		var newgravity:Int = FlxG.random.int(0, 3);
+		var gravity:Int = this.tromino.grav();
+		var newtiles:Array<Array<Int>> = [for (i in 0...tiles.length) [for (j in 0...tiles.length) 0]];
+		if (newgravity == gravity) {} else if (newgravity - gravity < 0) {
+			for (i in 0...(4 - (newgravity - gravity))) {
+				for (y in 0...tiles.length) {
+					for (x in 0...tiles.length) {
+						newtiles[x][y] = tiles[y][x];
 					}
 				}
-				tiles = newtiles;
+				for (row in newtiles) {
+					row.reverse();
+				}
 			}
+			tiles = newtiles;
+		} else {
+			for (i in 0...(newgravity - gravity)) {
+				for (y in 0...tiles.length) {
+					for (x in 0...tiles.length) {
+						newtiles[x][y] = tiles[y][x];
+					}
+				}
+				for (row in newtiles) {
+					row.reverse();
+				}
+			}
+			tiles = newtiles;
 		}
 		this.tromino.setGravity(newgravity);
-		this.downtimer = 0;
 	}
 
 	public function rem_full_lines(tiles:Array<Array<Int>>):Array<Int> {
