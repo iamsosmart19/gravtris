@@ -39,7 +39,7 @@ class PlayState extends FlxState {
 		this.downinterval = 0.5;
 		this.downtimer = 0.0;
 		this.softdrop = false;
-		this.flipScreen = true;
+		this.flipScreen = false;
 		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		this.arrow = new FlxSprite();
 		this.arrow.loadGraphic("assets/images/arrow.png");
@@ -53,7 +53,7 @@ class PlayState extends FlxState {
 		this.moveTimer = 0;
 		this.moveInterval = 0.05;
 		this.justDropped = false;
-		this.pauseInterval = 0.2;
+		this.pauseInterval = 0.8;
 		this.pauseTimer = 0.0;
 		// sprite init
 		var size:Int = 20;
@@ -99,16 +99,22 @@ class PlayState extends FlxState {
 
 	override public function update(elapsed:Float):Void {
 		// update timers
-		this.downtimer += elapsed;
+		if(this.justDropped) { 
+			this.pauseTimer += elapsed;
+		}
+		else {
+			this.downtimer += elapsed;
+			this.moveTimer += elapsed;
+		}
+		trace(this.pauseTimer);
+		trace(this.justDropped);
 		//////trace(this.downtimer);
-		this.moveTimer += elapsed;
-		this.pauseTimer += elapsed;
 		if(this.pauseTimer > this.pauseInterval) {
 			this.justDropped = false;
 			this.pauseTimer = 0.0;
 		}
 
-		if (this.justDropped != true || !(this.flipScreen)) { 
+		if (this.justDropped == false || !(this.flipScreen)) { 
 			// BEGINNING OF INPUT CODE
 			controls(this.tromino);
 			// END OF INPUT CODE
@@ -169,7 +175,7 @@ class PlayState extends FlxState {
 				case 1:
 					this.arrow.angle = 270;
 				case 2:
-				this.arrow.angle = 180;
+					this.arrow.angle = 180;
 				case 3:
 					this.arrow.angle = 90;
 			}
@@ -434,8 +440,11 @@ class PlayState extends FlxState {
 		this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
 		if (this.flipScreen) {
 			haxe.Timer.delay(newtromino.bind(), Std.int(this.pauseInterval * 1000));
+			haxe.Timer.delay(rotate.bind(), Std.int(this.pauseInterval * 1000));
 		}
-		rotate();
+		else {
+			newtromino();
+		}
 		this.downtimer = 0;
 		this.justDropped = true;
 		//Sys.sleep(0.1);
