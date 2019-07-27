@@ -1,9 +1,0 @@
-Feature								implementer		Status
-Screens (start, game over, etc)		
-Points								
-SRS									Chris
-dynamic board size					
-comments							Chris			
-create board class					
-multiplayer 						
-pause after block dropped							done
