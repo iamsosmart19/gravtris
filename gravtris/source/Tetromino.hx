@@ -14,35 +14,54 @@ class Tetromino {
 	private var gravity:Int;
 	private var flip:Bool;
 	private var hiddenGrav:Int;
+	private var rotDir:Int; // 0: North, 1: East, 2: South, 3: West
+	private var typ:Int;
 
 	public function new(type:Int, flipScreen:Bool) {
+		typ = type;
 		switch type {
 			case 0:
 				// O tetromino
-				this.blks = [[5, 5], [5, 5]];
+				this.blks = [[5, 5],
+			   				 [5, 5]];
 			case 1:
 				// I tetromino
-				this.blks = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 2, 2, 2, 2], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]];
+				this.blks = [[0, 0, 0, 0, 0], 
+							 [0, 0, 0, 0, 0], 
+							 [0, 2, 2, 2, 2], 
+							 [0, 0, 0, 0, 0], 
+							 [0, 0, 0, 0, 0]];
 			case 2:
 				// T tetromino
-				this.blks = [[0, 7, 0], [7, 7, 7], [0, 0, 0]];
+				this.blks = [[0, 7, 0],
+			   				 [7, 7, 7],
+							 [0, 0, 0]];
 			case 3:
 				// L tetromino
-				this.blks = [[0, 0, 4], [4, 4, 4], [0, 0, 0]];
+				this.blks = [[0, 0, 4],
+			   				 [4, 4, 4],
+							 [0, 0, 0]];
 			case 4:
 				// J tetromino
-				this.blks = [[3, 0, 0], [3, 3, 3], [0, 0, 0]];
+				this.blks = [[3, 0, 0],
+			   				 [3, 3, 3],
+							 [0, 0, 0]];
 			case 5:
 				// S tetromino
-				this.blks = [[0, 6, 6], [6, 6, 0], [0, 0, 0]];
+				this.blks = [[0, 6, 6],
+			   				 [6, 6, 0],
+							 [0, 0, 0]];
 			case 6:
 				// Z tetromino
-				this.blks = [[8, 8, 0], [0, 8, 8], [0, 0, 0]];
+				this.blks = [[8, 8, 0],
+			   				 [0, 8, 8],
+							 [0, 0, 0]];
 			default:
 				this.blks = [for (i in 0...3) [for (i in 0...3) 0]];
 		}
 		this.xC = 10;
 		this.yC = 10;
+		this.rotDir = 0;
 		this.gravity = 0;
 		this.hiddenGrav = 0;
 		this.flip = flipScreen;
@@ -68,6 +87,14 @@ class Tetromino {
 		}
 	}
 
+	public function rotation() {
+		return rotDir;
+	}
+
+	public function type() {
+		return typ;
+	}
+
 	public function rotateCW() {
 		// function that rotates the tetromino clockwise
 		var newblks:Array<Array<Int>> = [for (i in 0...blks.length) [for (j in 0...blks.length) 0]];
@@ -80,6 +107,7 @@ class Tetromino {
 			row.reverse();
 		}
 		blks = newblks;
+		this.rotDir = (this.rotDir + 1) % 4;
 	}
 
 	public function rotateCCW() {
@@ -94,6 +122,7 @@ class Tetromino {
 			}
 		}
 		blks = newblks;
+		this.rotDir = (this.rotDir - 1 < 0) ? this.rotDir = 3: this.rotDir--;
 	}
 
 	public function x():Int {
