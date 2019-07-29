@@ -27,6 +27,7 @@ class PlayState extends FlxState {
 	var downtimer:Float; // checks time till downinterval has passed, then reset to 0
 	var moveTimer:Float; // timer for mov
 	var moveInterval:Float;
+	var setjustDropped:Bool;
 	var justDropped:Bool;
 	var pauseTimer:Float; // checks time till pauseInterval has passed, then reset to 0
 	var pauseInterval:Float; // time after tromino has been dropped
@@ -37,7 +38,7 @@ class PlayState extends FlxState {
 		this.magicnumber = 3; // needs to be before .tiles
 		this.tiles = prosthetise([for (i in 0...24) [for (j in 0...24) 0]]);
 		this.bag = [0, 1, 2, 3, 4, 5, 6]; // needs to be before .tromino
-		this.downinterval = 0.5;
+		this.downinterval = 0.7;
 		this.downtimer = 0.0;
 		this.softdrop = false;
 		this.flipScreen = true;
@@ -52,7 +53,8 @@ class PlayState extends FlxState {
 		this.moveTimer = 0;
 		this.moveInterval = 0.1;
 		this.justDropped = false;
-		this.pauseInterval = 0.01;
+		this.setjustDropped = false;
+		this.pauseInterval = 0.1;
 		this.pauseTimer = 0.0;
 		// sprite init
 		var size:Int = 20;
@@ -72,7 +74,6 @@ class PlayState extends FlxState {
 		//offset access access access access: 0 is x, 1, is y
 		this.offsets = new Array<Array<Array<Array<Int>>>>();
 		this.offsets = 
-			//[[[[00, 00],[00, 00],[00, 00],[00, 00],[00, 00]], // *, rot 0, offsets 0-4
 			[[[[0,   0],[0,  0],[0,   0],[0,   0],[0,   0]],  // *, rot 0, offsets 0-4
 			  [[0,   0],[1,  0],[1,   1],[0,  -2],[1,  -2]],  // *, rot 1, offsets 0-4
 			  [[0,   0],[0,  0],[0,   0],[0,   0],[0,   0]],  // *, rot 2, offsets 0-4
@@ -117,41 +118,45 @@ class PlayState extends FlxState {
 
 	override public function update(elapsed:Float):Void {
 		// update timers
-		if (this.justDropped && (this.flipScreen)) {
+		if (this.justDropped) {
 			this.pauseTimer += elapsed;
 		} else {
 			this.downtimer += elapsed;
 			this.moveTimer += elapsed;
 		}
-		// trace(this.pauseTimer);
+		//trace(this.pauseTimer);
 		////trace(this.justDropped);
 		////////trace(this.downtimer);
 		if (this.pauseTimer > this.pauseInterval) {
+			if(this.flipScreen) {
+				rotate();
+			}
 			this.justDropped = false;
+			this.setjustDropped = false;
 			this.pauseTimer = 0.0;
 		}
 
-		if (this.justDropped == false || !(this.flipScreen)) {
-			// trace ( this.downtimer );
-			// BEGINNING OF INPUT CODE
-			//trace(this.pauseTimer);
-			controls(this.tromino);
-			// END OF INPUT CODE
-			// TODO -- REFACTOR INPUT
+		trace('nope: '+justDropped);
+		// trace ( this.downtimer );
+		// BEGINNING OF INPUT CODE
+		//trace(this.pauseTimer);
+		controls(this.tromino);
+		// END OF INPUT CODE
+		// TODO -- REFACTOR INPUT
 
-			// TODO: CONTROLS LINKED TO SINGLE TETROMINOS
-			if (this.downtimer > this.downinterval) {
-				this.tromino.down();
-				if (tromino_collide_tiles(this.tromino, this.tiles)) {
-					this.tromino.up();
-					// haxe.Timer.delay(die.bind(), 200);
-					die();
-				}
-				this.downtimer = 0.0;
+		// TODO: CONTROLS LINKED TO SINGLE TETROMINOS
+		if (this.downtimer > this.downinterval && !this.justDropped) {
+			this.tromino.down();
+			if (tromino_collide_tiles(this.tromino, this.tiles)) {
+				this.tromino.up();
+				// haxe.Timer.delay(die.bind(), 200);
+				die();
 			}
+			this.downtimer = 0.0;
+		}
 
-			// END OF GAMEPLAY CODE
-
+		// END OF GAMEPLAY CODE
+		if (!this.justDropped) {
 			// BEGINNING OF DISPLAY CODE
 			var realones:Array<Array<Int>> = tromino_plus_tiles(this.tromino, this.tiles);
 			//////trace(realones);
@@ -198,6 +203,9 @@ class PlayState extends FlxState {
 				case 3:
 					this.arrow.angle = 90;
 			}
+		}
+		if(this.setjustDropped) {
+			this.justDropped = true;
 		}
 
 		super.update(elapsed);
@@ -405,10 +413,39 @@ class PlayState extends FlxState {
 			}
 
 			if (FlxG.keys.justPressed.Z) {
+				var rotLoopCount:Int = 0;
+				var prevrot:Int = this.tromino.rotation();
+				trace("rot: "+this.tromino.rotation());
 				this.tromino.rotateCCW();
-				if (tromino_collide_tiles(this.tromino, this.tiles)) {
+				var x = this.tromino.x();
+				var y = this.tromino.y();
+				trace("rot: "+this.tromino.rotation());
+				trace("x: "+x);
+				trace("y: "+y);
+				while (tromino_collide_tiles(this.tromino, this.tiles) && rotLoopCount < 5) {
+					if(this.tromino.type() == 0) {
+						rotLoopCount = 5;
+					}
+					else if(this.tromino.type() > 1) {
+						this.tromino.setX(this.tromino.x() + (offsets[0][prevrot][rotLoopCount][0]
+															 - offsets[0][this.tromino.rotation()][rotLoopCount][0]));
+						this.tromino.setY(this.tromino.y() + (offsets[0][prevrot][rotLoopCount][1]
+															 - offsets[0][this.tromino.rotation()][rotLoopCount][1]));
+					}
+					else {
+						this.tromino.setX(this.tromino.x() + (offsets[0][prevrot][rotLoopCount][0]
+															 - offsets[0][this.tromino.rotation()][rotLoopCount][0]));
+						this.tromino.setY(this.tromino.y() + (offsets[0][prevrot][rotLoopCount][1]
+															 - offsets[0][this.tromino.rotation()][rotLoopCount][1]));
+					}
+					trace("new_x: "+this.tromino.x());
+					trace("new_y: "+this.tromino.y());
+					rotLoopCount++;
+				}
+				if(rotLoopCount == 5) {
 					this.tromino.rotateCW();
-					// TODO: super rotation system
+					this.tromino.setX(x);
+					this.tromino.setY(y);
 				}
 			}
 			if (FlxG.keys.justPressed.SPACE) {
@@ -492,10 +529,39 @@ class PlayState extends FlxState {
 			}
 
 			if (FlxG.keys.justPressed.Z) {
+				var rotLoopCount:Int = 0;
+				var prevrot:Int = this.tromino.rotation();
+				trace("rot: "+this.tromino.rotation());
 				this.tromino.rotateCCW();
-				if (tromino_collide_tiles(this.tromino, this.tiles)) {
+				var x = this.tromino.x();
+				var y = this.tromino.y();
+				trace("rot: "+this.tromino.rotation());
+				trace("x: "+x);
+				trace("y: "+y);
+				while (tromino_collide_tiles(this.tromino, this.tiles) && rotLoopCount < 5) {
+					if(this.tromino.type() == 0) {
+						rotLoopCount = 5;
+					}
+					else if(this.tromino.type() > 1) {
+						this.tromino.setX(this.tromino.x() + (offsets[0][prevrot][rotLoopCount][0]
+															 - offsets[0][this.tromino.rotation()][rotLoopCount][0]));
+						this.tromino.setY(this.tromino.y() + (offsets[0][prevrot][rotLoopCount][1]
+															 - offsets[0][this.tromino.rotation()][rotLoopCount][1]));
+					}
+					else {
+						this.tromino.setX(this.tromino.x() + (offsets[0][prevrot][rotLoopCount][0]
+															 - offsets[0][this.tromino.rotation()][rotLoopCount][0]));
+						this.tromino.setY(this.tromino.y() + (offsets[0][prevrot][rotLoopCount][1]
+															 - offsets[0][this.tromino.rotation()][rotLoopCount][1]));
+					}
+					trace("new_x: "+this.tromino.x());
+					trace("new_y: "+this.tromino.y());
+					rotLoopCount++;
+				}
+				if(rotLoopCount == 5) {
 					this.tromino.rotateCW();
-					// TODO: super rotation system
+					this.tromino.setX(x);
+					this.tromino.setY(y);
 				}
 			}
 			if (FlxG.keys.justPressed.SPACE) {
@@ -516,13 +582,8 @@ class PlayState extends FlxState {
 		}
 		this.tiles = prosthetise(tromino_plus_tiles(this.tromino, this.tiles));
 		newtromino();
-		if (this.flipScreen) {
-			haxe.Timer.delay(rotate.bind(), Std.int(this.pauseInterval * 1000));
-		} else {
-			rotate();
-		}
 		this.downtimer = 0;
-		this.justDropped = true;
+		this.setjustDropped = true;
 		// Sys.sleep(0.1);
 	}
 
