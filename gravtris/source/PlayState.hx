@@ -103,12 +103,15 @@ class PlayState extends FlxState {
 		title.text = "GRAVTRIS";
 		title.setFormat("assets/font.ttf", 24, FlxColor.WHITE, CENTER);
 		title.setBorderStyle(OUTLINE, FlxColor.BLUE, 1);
-		levelDisp = new FlxText(lastx + 80, 270, 300);
-		levelDisp.text = "0";
+
+		levelDisp = new FlxText(lastx + 80, 280, 300);
+		levelDisp.text = "Level: 0";
 		levelDisp.setFormat("assets/font.ttf", 24, FlxColor.WHITE, CENTER);
-		lineDisp = new FlxText(lastx + 80, 290, 300);
-		lineDisp.text = "0";
+
+		lineDisp = new FlxText(lastx + 80, 310, 300);
+		lineDisp.text = "Lines: 0";
 		lineDisp.setFormat("assets/font.ttf", 24, FlxColor.WHITE, CENTER);
+
 		arrow.x = lastx + 80;
 		arrow.y = 310;
 		add(title);
@@ -595,11 +598,11 @@ class PlayState extends FlxState {
 		}
 		var prevlines:Int = this.lineCount;
 		spaceFill(rem_full_lines(deprosthetise(this.tiles)));
-		this.lineDisp.text = Std.string(this.lineCount);
+		this.lineDisp.text = "Lines: " + Std.string(this.lineCount);
 		if (Std.int(this.lineCount / 10) > Std.int(prevlines / 10)) {
 			this.level += 1;
 			this.downinterval /= 1.2;
-			this.levelDisp.text = Std.string(this.level);
+			this.levelDisp.text = "Level: " + Std.string(this.level);
 		}
 		if (!this.flipScreen) {
 			var newgravity:Int = FlxG.random.int(0, 3);
