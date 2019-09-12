@@ -778,6 +778,6 @@ class PlayState extends FlxState {
 	}
 
 	public function gameover() {
-		trace("You Lose!");
+	       FlxG.switchState(new OverState());
 	}
 }
