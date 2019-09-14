@@ -11,10 +11,13 @@ import flixel.math.FlxRandom;
 import flixel.FlxG;
 
 class CreditsState extends FlxState {
+	var endButton: FlxText;
 	public function clickEnd():Void {
 	       FlxG.switchState(new MenuState());
 	}
 	override public function create():Void {
+		endButton  = new FlxButton(100, FlxG.height-100, "Return to Menu", clickEnd);
+		add(endButton);
 		super.create();
 	}
 
