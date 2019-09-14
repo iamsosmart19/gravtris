@@ -23,7 +23,10 @@ class MenuState extends FlxState {
 	}
 
 	override public function update(elapsed:Float):Void {
-		 //
+		 //switch to next screen if Enter pressed
+		if(FlxG.keys.justPressed.ENTER) {
+			clickPlay();
+		}
 		 super.update(elapsed);
 	}
 

@@ -21,8 +21,10 @@ class PlayState extends FlxState {
 	var flipScreen:Bool; // screen flip option
 	var lineCount:Int;
 	var level:Int;
+	var points:Int;
 	var levelDisp:FlxText;
 	var lineDisp:FlxText;
+	var pointsDisp:FlxText;
 	var downinterval:Float; // time for tromino to be dropped
 	var downtimer:Float; // checks time till downinterval has passed, then reset to 0
 	var moveTimer:Float; // timer for mov
@@ -48,6 +50,7 @@ class PlayState extends FlxState {
 		if (!this.flipScreen) {
 			add(this.arrow);
 		}
+		this.points = 0;
 		this.lineCount = 0;
 		this.level = 0;
 		this.moveTimer = 0;
@@ -99,24 +102,33 @@ class PlayState extends FlxState {
 			curx = stx;
 		}
 
+		//Displays game title
 		title = new FlxText(lastx + 80, 250, 300);
 		title.text = "GRAVTRIS";
 		title.setFormat("assets/font.ttf", 24, FlxColor.WHITE, CENTER);
 		title.setBorderStyle(OUTLINE, FlxColor.BLUE, 1);
 
+		//Displays level number
 		levelDisp = new FlxText(lastx + 80, 280, 300);
 		levelDisp.text = "Level: 0";
-		levelDisp.setFormat("assets/font.ttf", 24, FlxColor.WHITE, CENTER);
+		levelDisp.setFormat("assets/font.ttf", 24, FlxColor.WHITE, LEFT);
 
+		//Displays line number
 		lineDisp = new FlxText(lastx + 80, 310, 300);
 		lineDisp.text = "Lines: 0";
-		lineDisp.setFormat("assets/font.ttf", 24, FlxColor.WHITE, CENTER);
+		lineDisp.setFormat("assets/font.ttf", 24, FlxColor.WHITE, LEFT);
+
+		//Displays points 
+		pointsDisp = new FlxText(lastx + 200, 280, 300);
+		pointsDisp.text = "Points: 000000";
+		pointsDisp.setFormat("assets/font.ttf", 24, FlxColor.WHITE, LEFT);
 
 		arrow.x = lastx + 80;
 		arrow.y = 310;
 		add(title);
 		add(levelDisp);
 		add(lineDisp);
+		add(pointsDisp);
 	}
 
 	override public function update(elapsed:Float):Void {
@@ -139,7 +151,7 @@ class PlayState extends FlxState {
 			this.pauseTimer = 0.0;
 		}
 
-		trace('nope: '+justDropped);
+		//trace('nope: '+justDropped);
 		// trace ( this.downtimer );
 		// BEGINNING OF INPUT CODE
 		//trace(this.pauseTimer);
@@ -580,6 +592,8 @@ class PlayState extends FlxState {
 
 	public function die():Void {
 		if (this.softdrop) {
+			this.points++;
+			this.points++;
 			this.downinterval *= 8;
 			this.softdrop = false;
 		}
@@ -587,6 +601,8 @@ class PlayState extends FlxState {
 		newtromino();
 		this.downtimer = 0;
 		this.setjustDropped = true;
+		this.points++;
+		pointsDisp.text = "Points: " + [for(i in 0...(6 - Std.string(points).length)) "0"].join("") + this.points;
 		// Sys.sleep(0.1);
 	}
 
@@ -658,6 +674,7 @@ class PlayState extends FlxState {
 		}
 		for (i in colarray) {
 			lineCount += 1;
+			this.points += 100;
 			if (i <= this.tiles.length / 2) {
 				gravitarry.push(3);
 			} else {
@@ -666,6 +683,7 @@ class PlayState extends FlxState {
 		}
 		for (i in rowarray) {
 			lineCount += 1;
+			this.points += 100;
 			if (i <= this.tiles[0].length / 2) {
 				gravitarry.push(2);
 			} else {

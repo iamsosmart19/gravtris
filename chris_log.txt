@@ -43,3 +43,8 @@ we also discussed technical details of implementatin of collision detection and 
 21/7/19
 discussed the possibility of multiplayer on the same board, using wasd and arrow keys
 
+12/9/19
+fixed up line formatting
+features to add:
+	* background colour
+	* next tile
