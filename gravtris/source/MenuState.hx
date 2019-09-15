@@ -16,9 +16,10 @@ class MenuState extends FlxState {
 	var settingsButton:FlxButton;
 	var creditsButton:FlxButton;
 	var title:FlxText;
+	var flipScreen: Bool;
 
 	public function clickPlay():Void {
-	       FlxG.switchState(new PlayState());
+	       FlxG.switchState(new PlayState(flipScreen));
 	}
 
 	public function clickHowPlay():Void {
@@ -31,6 +32,11 @@ class MenuState extends FlxState {
 
 	public function clickCredPlay():Void {
 	       FlxG.switchState(new CreditsState());
+	}
+
+	public function new(?flipDaScreen:Bool = true) {
+		flipScreen = flipDaScreen;
+		super();
 	}
 
 	override public function create():Void {

@@ -35,6 +35,11 @@ class PlayState extends FlxState {
 	var pauseInterval:Float; // time after tromino has been dropped
 	var offsets:Array<Array<Array<Array<Int>>>>; //table for storing all the offset values 
 
+	public function new(?flipDaScreen = true) {
+		this.flipScreen = flipDaScreen;
+		super();
+	}
+
 	override public function create():Void {
 		super.create();
 		this.magicnumber = 3; // needs to be before .tiles
@@ -43,7 +48,6 @@ class PlayState extends FlxState {
 		this.downinterval = 0.7;
 		this.downtimer = 0.0;
 		this.softdrop = false;
-		this.flipScreen = true;
 		this.tromino = new Tetromino(next_bag(), this.flipScreen);
 		this.arrow = new FlxSprite();
 		this.arrow.loadGraphic("assets/images/arrow.png");
@@ -57,7 +61,7 @@ class PlayState extends FlxState {
 		this.moveInterval = 0.1;
 		this.justDropped = false;
 		this.setjustDropped = false;
-		this.pauseInterval = 0.1;
+		this.pauseInterval = 0.2;
 		this.pauseTimer = 0.0;
 		// sprite init
 		var size:Int = 20;
