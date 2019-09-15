@@ -128,7 +128,7 @@ class PlayState extends FlxState {
 		pointsDisp.setFormat("assets/font.ttf", 24, FlxColor.WHITE, LEFT);
 
 		arrow.x = lastx + 80;
-		arrow.y = 310;
+		arrow.y = 340;
 		add(title);
 		add(levelDisp);
 		add(lineDisp);
